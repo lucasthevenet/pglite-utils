@@ -1,6 +1,6 @@
 {
 	"name": "@pglite-utils/prisma-adapter",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"description": "Prisma's driver adapter for \"@electric-sql/pglite\"",
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.mjs",
@@ -21,7 +21,10 @@
 		"lint": "biome check ./src",
 		"typecheck": "tsc --noEmit"
 	},
-	"files": ["dist", "README.md"],
+	"files": [
+		"dist",
+		"README.md"
+	],
 	"keywords": [
 		"pglite",
 		"electric-sql",
