@@ -1,0 +1,55 @@
+{
+	"name": "@pglite-utils/prisma-adapter",
+	"version": "0.0.1",
+	"description": "Prisma's driver adapter for \"@electric-sql/pglite\"",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.cts",
+	"exports": {
+		"require": {
+			"types": "./dist/index.d.cts",
+			"default": "./dist/index.cjs"
+		},
+		"import": {
+			"types": "./dist/index.d.mts",
+			"default": "./dist/index.mjs"
+		}
+	},
+	"scripts": {
+		"build": "pkgroll",
+		"clean": "rm -rf .turbo node_modules dist",
+		"lint": "biome check ./src",
+		"typecheck": "tsc --noEmit"
+	},
+	"files": ["dist", "README.md"],
+	"keywords": [
+		"pglite",
+		"electric-sql",
+		"serverless",
+		"PostgreSQL",
+		"edge",
+		"Vercel",
+		"Cloudflare",
+		"Netlify",
+		"Bun",
+		"Deno",
+		"database",
+		"SQL",
+		"Prisma"
+	],
+	"author": "Lucas Thevenet <lcervantes@dc.uba.ar>",
+	"license": "Apache-2.0",
+	"sideEffects": false,
+	"dependencies": {
+		"@prisma/driver-adapter-utils": "5.14.0"
+	},
+	"devDependencies": {
+		"@electric-sql/pglite": "^0.1.5",
+		"@types/node": "^20.5.1",
+		"pkgroll": "2.1.1",
+		"typescript": "^5.2.2"
+	},
+	"peerDependencies": {
+		"@electric-sql/pglite": ">= 0.1.5"
+	}
+}
