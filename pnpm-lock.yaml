@@ -45,15 +45,15 @@ importers:
       '@electric-sql/pglite':
         specifier: ^0.1.5
         version: 0.1.5
-      '@pglite-utils/prisma-adapter':
-        specifier: workspace:*
-        version: link:../packages/prisma-adapter
       '@prisma/client':
         specifier: 5.14.0
         version: 5.14.0(prisma@5.14.0)
       '@prisma/driver-adapter-utils':
         specifier: 5.14.0
         version: 5.14.0
+      pglite-prisma-adapter:
+        specifier: workspace:*
+        version: link:../packages/prisma-adapter
       superjson:
         specifier: ^2.2.0
         version: 2.2.1
