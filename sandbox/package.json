@@ -12,7 +12,7 @@
         "@electric-sql/pglite": "^0.1.5",
         "@prisma/client": "5.14.0",
         "@prisma/driver-adapter-utils": "5.14.0",
-        "@pglite-utils/prisma-adapter": "workspace:*",
+        "pglite-prisma-adapter": "workspace:*",
         "superjson": "^2.2.0"
     },
     "devDependencies": {

@@ -1,5 +1,5 @@
 {
-	"name": "@pglite-utils/prisma-adapter",
+	"name": "pglite-prisma-adapter",
 	"version": "0.1.0",
 	"description": "Prisma's driver adapter for \"@electric-sql/pglite\"",
 	"main": "./dist/index.cjs",

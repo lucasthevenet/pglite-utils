@@ -1,4 +1,4 @@
-# @pglite-utils/prisma-adapter
+# pglite-adapter-prisma
 
 Prisma driver adapter for [Pglite Driver](https://github.com/electric-sql/pglite).
 
