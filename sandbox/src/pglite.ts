@@ -1,5 +1,5 @@
 import { PGlite } from '@electric-sql/pglite'
-import { PrismaPGlite } from '@pglite-utils/prisma-adapter'
+import { PrismaPGlite } from 'pglite-prisma-adapter'
 import { smokeTest } from './test'
 import { readFile } from 'node:fs/promises'
 

@@ -5,6 +5,24 @@ import {
 	JsonNullMarker,
 } from "@prisma/driver-adapter-utils";
 
+const ArrayColumnType = {
+	BYTEA: 1001,
+	CHAR: 1002,
+	INT8: 1016,
+	INT2: 1005,
+	INT4: 1007,
+	TEXT: 1009,
+	OID: 1028,
+	JSON: 199,
+	FLOAT4: 1021,
+	FLOAT8: 1022,
+	VARCHAR: 1015,
+	JSONB: 3807,
+	DATE: 1182,
+	TIMESTAMP: 1115,
+	TIMESTAMPTZ: 1116,
+  }
+
 export class UnsupportedNativeDataType extends Error {
 	// map of type codes to type names
 	static typeNames: { [key: number]: string } = {
@@ -178,30 +196,30 @@ export function fieldToColumnType(fieldTypeId: number): ColumnType {
 			return ColumnTypeEnum.Text;
 		case pglite.types.BYTEA:
 			return ColumnTypeEnum.Bytes;
-		case pglite.types.arrayTypes[pglite.types.INT2]:
-		case pglite.types.arrayTypes[pglite.types.INT4]:
+		case ArrayColumnType.INT2:
+		case ArrayColumnType.INT4:
 			return ColumnTypeEnum.Int32Array;
-		case pglite.types.arrayTypes[pglite.types.FLOAT4]:
+		case ArrayColumnType.FLOAT4:
 			return ColumnTypeEnum.FloatArray;
-		case pglite.types.arrayTypes[pglite.types.FLOAT8]:
+		case ArrayColumnType.FLOAT8:
 			return ColumnTypeEnum.DoubleArray;
-		case pglite.types.arrayTypes[pglite.types.CHAR]:
+		case ArrayColumnType.CHAR:
 			return ColumnTypeEnum.CharacterArray;
-		case pglite.types.arrayTypes[pglite.types.TEXT]:
-		case pglite.types.arrayTypes[pglite.types.VARCHAR]:
+		case ArrayColumnType.TEXT:
+		case ArrayColumnType.VARCHAR:
 			return ColumnTypeEnum.TextArray;
-		case pglite.types.arrayTypes[pglite.types.DATE]:
+		case ArrayColumnType.DATE:
 			return ColumnTypeEnum.DateArray;
-		case pglite.types.arrayTypes[pglite.types.TIMESTAMP]:
-		case pglite.types.arrayTypes[pglite.types.TIMESTAMPTZ]:
+		case ArrayColumnType.TIMESTAMP:
+		case ArrayColumnType.TIMESTAMPTZ:
 			return ColumnTypeEnum.DateTimeArray;
-		case pglite.types.arrayTypes[pglite.types.JSON]:
-		case pglite.types.arrayTypes[pglite.types.JSONB]:
+		case ArrayColumnType.JSON:
+		case ArrayColumnType.JSONB:
 			return ColumnTypeEnum.JsonArray;
-		case pglite.types.arrayTypes[pglite.types.BYTEA]:
+		case ArrayColumnType.BYTEA:
 			return ColumnTypeEnum.BytesArray;
-		case pglite.types.arrayTypes[pglite.types.OID]:
-		case pglite.types.arrayTypes[pglite.types.INT8]:
+		case ArrayColumnType.OID:
+		case ArrayColumnType.INT8:
 			return ColumnTypeEnum.Int64Array;
 		default:
 			// Postgres custom types (types that come from extensions and user's enums).
@@ -235,7 +253,7 @@ function normalize_timestamp(time: string): string {
 }
 
 function normalize_timestampz(time: string): string {
-	return time.split("+")[0];
+	return time.split("+")[0] as string;
 }
 
 /*
@@ -249,7 +267,7 @@ function normalize_time(time: string): string {
 function normalize_timez(time: string): string {
 	// Although it might be controversial, UTC is assumed in consistency with the behavior of rust postgres driver
 	// in quaint. See quaint/src/connector/postgres/conversion.rs
-	return time.split("+")[0];
+	return time.split("+")[0] as string;
 }
 /******************/
 /* Money handling */
@@ -316,24 +334,24 @@ function normalizeBit(bit: string): string {
 
 export const customParsers: pglite.ParserOptions = {
 	[pglite.types.NUMERIC]: normalize_numeric,
-	// [pglite.types.arrayTypes[pglite.types.NUMERIC]]: normalize_numeric,
+	// [ArrayColumnType.NUMERIC]]: normalize_numeric,
 	[pglite.types.TIME]: normalize_time,
-	// [pglite.types.arrayTypes[pglite.types.TIME]]: normalize_time,
+	// [ArrayColumnType.TIME]]: normalize_time,
 	[pglite.types.TIMETZ]: normalize_timez,
 	[pglite.types.DATE]: normalize_date,
-	[pglite.types.arrayTypes[pglite.types.DATE]]: normalize_date,
+	[ArrayColumnType.DATE]: normalize_date,
 	[pglite.types.TIMESTAMP]: normalize_timestamp,
-	[pglite.types.arrayTypes[pglite.types.TIMESTAMP]]: normalize_timestamp,
+	[ArrayColumnType.TIMESTAMP]: normalize_timestamp,
 	[pglite.types.TIMESTAMPTZ]: normalize_timestampz,
-	[pglite.types.arrayTypes[pglite.types.TIMESTAMPTZ]]: normalize_timestampz,	
+	[ArrayColumnType.TIMESTAMPTZ]: normalize_timestampz,	
 	[pglite.types.MONEY]: normalize_money,
-	// [pglite.types.arrayTypes[pglite.types.MONEY]]: normalize_money,
+	// [ArrayColumnType.MONEY]]: normalize_money,
 	[pglite.types.JSON]: toJson,
-	[pglite.types.arrayTypes[pglite.types.JSON]]: toJson,
+	[ArrayColumnType.JSON]: toJson,
 	[pglite.types.JSONB]: toJson,
-	[pglite.types.arrayTypes[pglite.types.JSONB]]: toJson,
+	[ArrayColumnType.JSONB]: toJson,
 	[pglite.types.BYTEA]: convertBytes,
-	[pglite.types.arrayTypes[pglite.types.BYTEA]]: convertBytes,
+	[ArrayColumnType.BYTEA]: convertBytes,
 };
 
 // https://github.com/brianc/node-postgres/pull/2930
