@@ -21,10 +21,7 @@
 		"lint": "biome check ./src",
 		"typecheck": "tsc --noEmit"
 	},
-	"files": [
-		"dist",
-		"README.md"
-	],
+	"files": ["dist", "README.md"],
 	"keywords": [
 		"pglite",
 		"electric-sql",
@@ -43,6 +40,9 @@
 	"author": "Lucas Thevenet <lcervantes@dc.uba.ar>",
 	"license": "Apache-2.0",
 	"sideEffects": false,
+	"publishConfig": {
+		"access": "public"
+	},
 	"dependencies": {
 		"@prisma/driver-adapter-utils": "5.14.0"
 	},
