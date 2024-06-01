@@ -96,7 +96,7 @@ class PGliteQueryable<
 			const error = e as Error;
 			debug("Error in performIO: %O", error);
 			if (
-				e &&
+				typeof e === "object" &&
 				typeof e.code === "string" &&
 				typeof e.severity === "string" &&
 				typeof e.message === "string"
