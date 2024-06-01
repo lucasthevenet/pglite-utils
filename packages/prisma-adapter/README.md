@@ -19,7 +19,7 @@ npm install @pglite-utils/prisma-adapter @electric-sql/pglite
 
 ## DATABASE URL
 
-Set the environment to your .env file in the local environment. You can get connection information on the TiDB Cloud console.
+Set the environment to your .env file in the local environment.
 
 ```env
 // .env
@@ -42,7 +42,7 @@ generator client {
 }
 
 datasource db {
-    provider     = "pglite"
+    provider     = "postgres"
     url          = env("DATABASE_URL")
 }
 
@@ -134,3 +134,8 @@ try {
   await prisma.$transaction([createUser1, createUser3]) // Operations succeed together
 }
 ```
+
+## Credits
+Based on other projects:
+- [@tidbcloud/prisma-adapter](https://github.com/tidbcloud/prisma-adapter)
+- [@prisma/adapter-pg](https://github.com/prisma/prisma/tree/main/packages/adapter-pg)
