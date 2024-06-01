@@ -1,5 +1,11 @@
 # @pglite-utils/prisma-adapter
 
+## 0.1.2
+
+### Patch Changes
+
+- 014e2ec: Fixed unsupported native data type error handling
+
 ## 0.1.1
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # sandbox
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [014e2ec]
+  - pglite-prisma-adapter@0.1.2
+
 ## 0.0.3
 
 ### Patch Changes
