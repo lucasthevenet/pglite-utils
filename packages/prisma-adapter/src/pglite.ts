@@ -14,6 +14,7 @@ import { Debug, err, ok } from "@prisma/driver-adapter-utils";
 
 import { name as packageName } from "../package.json";
 import {
+	UnsupportedNativeDataType,
 	customParsers,
 	fieldToColumnType,
 	fixArrayBufferValues,
@@ -44,9 +45,19 @@ class PGliteQueryable<
 
 		const { fields, rows } = res.value;
 		const columnNames = fields.map((field) => field.name);
-		const columnTypes: ColumnType[] = fields.map((field) =>
-			fieldToColumnType(field.dataTypeID),
-		);
+		let columnTypes: ColumnType[] = [];
+
+		try {
+			columnTypes = fields.map((field) => fieldToColumnType(field.dataTypeID));
+		} catch (e) {
+			if (e instanceof UnsupportedNativeDataType) {
+				return err({
+					kind: "UnsupportedNativeDataType",
+					type: e.type,
+				});
+			}
+			throw e;
+		}
 
 		return ok({
 			columnNames,
@@ -59,15 +70,10 @@ class PGliteQueryable<
 		const tag = "[js::execute_raw]";
 		debug(`${tag} %O`, query);
 
-		const result = await this.performIO(query);
-
-		if (!result.ok) {
-			return err(result.error);
-		}
-
-		const { affectedRows } = result.value;
-
-		return ok(affectedRows ?? 0);
+		// Note: `affectedRows` can sometimes be null (e.g., when executing `"BEGIN"`)
+		return (await this.performIO(query)).map(
+			({ affectedRows }) => affectedRows ?? 0,
+		);
 	}
 
 	private async performIO(
@@ -90,7 +96,7 @@ class PGliteQueryable<
 			const error = e as Error;
 			debug("Error in performIO: %O", error);
 			if (
-				e &&
+				typeof e === "object" &&
 				typeof e.code === "string" &&
 				typeof e.severity === "string" &&
 				typeof e.message === "string"
