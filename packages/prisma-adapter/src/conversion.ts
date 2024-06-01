@@ -1,10 +1,18 @@
-import * as pglite from "@electric-sql/pglite";
+import { types, type ParserOptions } from "@electric-sql/pglite";
 import {
 	type ColumnType,
 	ColumnTypeEnum,
 	JsonNullMarker,
 } from "@prisma/driver-adapter-utils";
 
+const ScalarColumnType = types;
+
+/**
+ * PostgreSQL array column types (not defined in ScalarColumnType).
+ *
+ * See the semantics of each of this code in:
+ *   https://github.com/postgres/postgres/blob/master/src/include/catalog/pg_type.dat
+ */
 const ArrayColumnType = {
 	BYTEA: 1001,
 	CHAR: 1002,
@@ -156,45 +164,45 @@ export class UnsupportedNativeDataType extends Error {
  */
 export function fieldToColumnType(fieldTypeId: number): ColumnType {
 	switch (fieldTypeId) {
-		case pglite.types.INT2:
-		case pglite.types.INT4:
+		case ScalarColumnType.INT2:
+		case ScalarColumnType.INT4:
 			return ColumnTypeEnum.Int32;
-		case pglite.types.INT8:
+		case ScalarColumnType.INT8:
 			return ColumnTypeEnum.Int64;
-		case pglite.types.FLOAT4:
+		case ScalarColumnType.FLOAT4:
 			return ColumnTypeEnum.Float;
-		case pglite.types.FLOAT8:
+		case ScalarColumnType.FLOAT8:
 			return ColumnTypeEnum.Double;
-		case pglite.types.BOOL:
+		case ScalarColumnType.BOOL:
 			return ColumnTypeEnum.Boolean;
-		case pglite.types.DATE:
+		case ScalarColumnType.DATE:
 			return ColumnTypeEnum.Date;
-		case pglite.types.TIME:
-		case pglite.types.TIMETZ:
+		case ScalarColumnType.TIME:
+		case ScalarColumnType.TIMETZ:
 			return ColumnTypeEnum.Time;
-		case pglite.types.TIMESTAMP:
-		case pglite.types.TIMESTAMPTZ:
+		case ScalarColumnType.TIMESTAMP:
+		case ScalarColumnType.TIMESTAMPTZ:
 			return ColumnTypeEnum.DateTime;
-		case pglite.types.NUMERIC:
-		case pglite.types.MONEY:
+		case ScalarColumnType.NUMERIC:
+		case ScalarColumnType.MONEY:
 			return ColumnTypeEnum.Numeric;
-		case pglite.types.JSON:
-		case pglite.types.JSONB:
+		case ScalarColumnType.JSON:
+		case ScalarColumnType.JSONB:
 			return ColumnTypeEnum.Json;
-		case pglite.types.UUID:
+		case ScalarColumnType.UUID:
 			return ColumnTypeEnum.Uuid;
-		case pglite.types.OID:
+		case ScalarColumnType.OID:
 			return ColumnTypeEnum.Int64;
-		case pglite.types.BPCHAR:
-		case pglite.types.TEXT:
-		case pglite.types.VARCHAR:
-		case pglite.types.BIT:
-		case pglite.types.VARBIT:
-		case pglite.types.INET:
-		case pglite.types.CIDR:
-		case pglite.types.XML:
+		case ScalarColumnType.BPCHAR:
+		case ScalarColumnType.TEXT:
+		case ScalarColumnType.VARCHAR:
+		case ScalarColumnType.BIT:
+		case ScalarColumnType.VARBIT:
+		case ScalarColumnType.INET:
+		case ScalarColumnType.CIDR:
+		case ScalarColumnType.XML:
 			return ColumnTypeEnum.Text;
-		case pglite.types.BYTEA:
+		case ScalarColumnType.BYTEA:
 			return ColumnTypeEnum.Bytes;
 		case ArrayColumnType.INT2:
 		case ArrayColumnType.INT4:
@@ -332,25 +340,25 @@ function normalizeBit(bit: string): string {
 	return bit
   }
 
-export const customParsers: pglite.ParserOptions = {
-	[pglite.types.NUMERIC]: normalize_numeric,
+export const customParsers: ParserOptions = {
+	[ScalarColumnType.NUMERIC]: normalize_numeric,
 	// [ArrayColumnType.NUMERIC]]: normalize_numeric,
-	[pglite.types.TIME]: normalize_time,
+	[ScalarColumnType.TIME]: normalize_time,
 	// [ArrayColumnType.TIME]]: normalize_time,
-	[pglite.types.TIMETZ]: normalize_timez,
-	[pglite.types.DATE]: normalize_date,
+	[ScalarColumnType.TIMETZ]: normalize_timez,
+	[ScalarColumnType.DATE]: normalize_date,
 	[ArrayColumnType.DATE]: normalize_date,
-	[pglite.types.TIMESTAMP]: normalize_timestamp,
+	[ScalarColumnType.TIMESTAMP]: normalize_timestamp,
 	[ArrayColumnType.TIMESTAMP]: normalize_timestamp,
-	[pglite.types.TIMESTAMPTZ]: normalize_timestampz,
+	[ScalarColumnType.TIMESTAMPTZ]: normalize_timestampz,
 	[ArrayColumnType.TIMESTAMPTZ]: normalize_timestampz,	
-	[pglite.types.MONEY]: normalize_money,
+	[ScalarColumnType.MONEY]: normalize_money,
 	// [ArrayColumnType.MONEY]]: normalize_money,
-	[pglite.types.JSON]: toJson,
+	[ScalarColumnType.JSON]: toJson,
 	[ArrayColumnType.JSON]: toJson,
-	[pglite.types.JSONB]: toJson,
+	[ScalarColumnType.JSONB]: toJson,
 	[ArrayColumnType.JSONB]: toJson,
-	[pglite.types.BYTEA]: convertBytes,
+	[ScalarColumnType.BYTEA]: convertBytes,
 	[ArrayColumnType.BYTEA]: convertBytes,
 };
 
