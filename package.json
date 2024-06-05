@@ -1,24 +1,25 @@
 {
-	"private": true,
-	"engines": {
-		"node": ">=20.12.0"
-	},
-	"packageManager": "pnpm@9.1.0",
-	"scripts": {
-		"build": "turbo run build",
-		"test": "turbo run test",
-		"clean": "git clean -xdf node_modules",
-		"clean:workspaces": "turbo clean",
-		"lint": "turbo lint",
-		"lint:fix": "turbo lint --continue -- --apply",
-		"lint:ws": "pnpm dlx sherif@latest",
-		"typecheck": "turbo typecheck",
-		"release": "turbo run build && changeset publish"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "1.7.3",
-		"@changesets/cli": "^2.27.5",
-		"turbo": "^1.13.3",
-		"typescript": "^5.4.5"
-	}
+  "private": true,
+  "engines": {
+    "node": ">=20.12.0"
+  },
+  "packageManager": "pnpm@8.15.4",
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "clean": "git clean -xdf node_modules",
+    "clean:workspaces": "turbo clean",
+    "lint": "turbo lint",
+    "lint:fix": "turbo lint --continue -- --apply",
+    "lint:ws": "pnpm dlx sherif@latest",
+    "typecheck": "turbo typecheck",
+    "release": "turbo run build && changeset publish"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.7.3",
+    "@changesets/cli": "^2.27.5",
+    "turbo": "^2.0.1",
+    "typescript": "^5.4.5"
+  },
+  "name": "pglite-utils"
 }

@@ -1,36 +1,55 @@
 {
-	"$schema": "https://turborepo.org/schema.json",
-	"experimentalUI": true,
-	"globalDependencies": ["**/.env"],
-	"pipeline": {
-		"topo": {
-			"dependsOn": ["^topo"]
-		},
-		"build": {
-			"dependsOn": ["^build"],
-			"outputs": ["dist/**"]
-		},
-		"test": {
-			"dependsOn": ["^test"],
-			"outputs": []
-		},
-		"dev": {
-			"persistent": true,
-			"cache": false
-		},
-		"lint": {
-			"dependsOn": ["^topo", "^build"]
-		},
-		"typecheck": {
-			"dependsOn": ["^topo", "^build"],
-			"outputs": ["node_modules/.cache/tsbuildinfo.json"]
-		},
-		"clean": {
-			"cache": false
-		},
-		"//#clean": {
-			"cache": false
-		}
-	},
-	"globalEnv": ["DATABASE_URL"]
+  "$schema": "https://turborepo.org/schema.json",
+  "globalDependencies": [
+    "**/.env"
+  ],
+  "globalEnv": [
+    "DATABASE_URL"
+  ],
+  "tasks": {
+    "topo": {
+      "dependsOn": [
+        "^topo"
+      ]
+    },
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**"
+      ]
+    },
+    "test": {
+      "dependsOn": [
+        "^test"
+      ],
+      "outputs": []
+    },
+    "dev": {
+      "persistent": true,
+      "cache": false
+    },
+    "lint": {
+      "dependsOn": [
+        "^topo",
+        "^build"
+      ]
+    },
+    "typecheck": {
+      "dependsOn": [
+        "^topo",
+        "^build"
+      ],
+      "outputs": [
+        "node_modules/.cache/tsbuildinfo.json"
+      ]
+    },
+    "clean": {
+      "cache": false
+    },
+    "//#clean": {
+      "cache": false
+    }
+  }
 }
