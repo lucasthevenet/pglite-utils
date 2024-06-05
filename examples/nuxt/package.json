@@ -1,0 +1,26 @@
+{
+  "name": "examples-nuxt",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "db:init": "pnpm dlx tsx prisma/initialize.ts"
+  },
+  "dependencies": {
+    "@auth/core": "^0.32.0",
+    "@auth/prisma-adapter": "^2.2.0",
+    "@electric-sql/pglite": "^0.1.5",
+    "@prisma/client": "5.14.0",
+    "nuxt": "^3.11.2",
+    "pathe": "^1.1.2",
+    "pglite-prisma-adapter": "workspace:^",
+    "vue": "^3.4.27",
+    "vue-router": "^4.3.2"
+  },
+  "devDependencies": {
+    "prisma": "5.14.0"
+  }
+}

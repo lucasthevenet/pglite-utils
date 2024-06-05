@@ -11,10 +11,10 @@ Before you start, make sure you have:
 
 ## Install
 
-You will need to install the `@pglite-utils/prisma-adapter` driver adapter and the `@electric-sql/pglite` serverless driver.
+You will need to install the `pglite-prisma-adapter` driver adapter and the `@electric-sql/pglite` serverless driver.
 
 ```
-npm install @pglite-utils/prisma-adapter @electric-sql/pglite
+npm install pglite-prisma-adapter @electric-sql/pglite
 ```
 
 ## DATABASE URL
@@ -61,7 +61,7 @@ Here is an example of query:
 ```js
 // query.js
 import { PGlite } from '@electric-sql/pglite';
-import { PrismaPGlite } from '@pglite-utils/prisma-adapter';
+import { PrismaPGlite } from 'pglite-prisma-adapter';
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 
@@ -94,7 +94,7 @@ Here is an example of transaction:
 ```js
 // query.js
 import { PGlite } from '@electric-sql/pglite';
-import { PrismaPGlite } from '@pglite-utils/prisma-adapter';
+import { PrismaPGlite } from 'pglite-prisma-adapter';
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
 

@@ -1,4 +1,4 @@
-# @pglite-utils/prisma-adapter
+# pglite-prisma-adapter
 
 ## 0.1.3
 
