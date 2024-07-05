@@ -12,6 +12,7 @@ import type {
 } from "@prisma/driver-adapter-utils";
 import { Debug, err, ok } from "@prisma/driver-adapter-utils";
 
+import type { PGliteWorker } from "@electric-sql/pglite/worker";
 import { name as packageName } from "../package.json";
 import {
 	UnsupportedNativeDataType,
@@ -20,7 +21,6 @@ import {
 	fixArrayBufferValues,
 } from "./conversion";
 import { type Deferred, createDeferred } from "./deferred";
-import type { PGliteWorker } from "@electric-sql/pglite/worker";
 
 const debug = Debug("prisma:driver-adapter:pglite");
 
