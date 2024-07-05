@@ -1,9 +1,5 @@
 import { types, type ParserOptions } from "@electric-sql/pglite";
-import {
-	type ColumnType,
-	ColumnTypeEnum,
-	JsonNullMarker,
-} from "@prisma/driver-adapter-utils";
+import { type ColumnType, ColumnTypeEnum } from "@prisma/driver-adapter-utils";
 
 const ScalarColumnType = types;
 
@@ -29,7 +25,7 @@ const ArrayColumnType = {
 	DATE: 1182,
 	TIMESTAMP: 1115,
 	TIMESTAMPTZ: 1116,
-  }
+} as const;
 
 export class UnsupportedNativeDataType extends Error {
 	// map of type codes to type names
@@ -240,13 +236,20 @@ export function fieldToColumnType(fieldTypeId: number): ColumnType {
 			throw new UnsupportedNativeDataType(fieldTypeId);
 	}
 }
+
+function normalize_array<T>(
+	element_normalizer: (string: string) => T,
+): (string: string) => T[] {
+	return (str) => types.parseArray(str, element_normalizer);
+}
+
 /****************************/
 /* Number-related data-types  */
 /****************************/
 
 function normalize_numeric(numeric: string): string {
-	return numeric
-  }
+	return numeric;
+}
 
 /****************************/
 /* Time-related data-types  */
@@ -290,17 +293,12 @@ function normalize_money(money: string): string {
 /*****************/
 
 /**
- * JsonNull are stored in JSON strings as the string "null", distinguishable from
- * the `null` value which is used by the driver to represent the database NULL.
- * By default, JSON and JSONB columns use JSON.parse to parse a JSON column value
- * and this will lead to serde_json::Value::Null in Rust, which will be interpreted
- * as DbNull.
- *
- * By converting "null" to JsonNullMarker, we can signal JsonNull in Rust side and
- * convert it to QuaintValue::Json(Some(Null)).
+ * We hand off JSON handling entirely to engines, so we keep it
+ * stringified here. This function needs to exist as otherwise
+ * the default type parser attempts to deserialise it.
  */
 function toJson(json: string): unknown {
-	return json === "null" ? JsonNullMarker : JSON.parse(json);
+	return json;
 }
 
 /************************/
@@ -322,7 +320,7 @@ function encodeBuffer(buffer: Buffer) {
  * BYTEA - arbitrary raw binary strings
  */
 
-const parsePgBytes = (x: string) => Buffer.from(x.slice(2), "hex")
+const parsePgBytes = (x: string) => Buffer.from(x.slice(2), "hex");
 
 /**
  * Convert bytes to a JSON-encodable representation since we can't
@@ -330,36 +328,25 @@ const parsePgBytes = (x: string) => Buffer.from(x.slice(2), "hex")
  * boundary.
  */
 function convertBytes(serializedBytes: string): number[] {
-	const buffer = parsePgBytes(serializedBytes)
-	return encodeBuffer(buffer)
-  }
-
-/* BIT_ARRAY, VARBIT_ARRAY */
-
-function normalizeBit(bit: string): string {
-	return bit
-  }
+	const buffer = parsePgBytes(serializedBytes);
+	return encodeBuffer(buffer);
+}
 
 export const customParsers: ParserOptions = {
 	[ScalarColumnType.NUMERIC]: normalize_numeric,
-	// [ArrayColumnType.NUMERIC]]: normalize_numeric,
 	[ScalarColumnType.TIME]: normalize_time,
-	// [ArrayColumnType.TIME]]: normalize_time,
 	[ScalarColumnType.TIMETZ]: normalize_timez,
 	[ScalarColumnType.DATE]: normalize_date,
-	[ArrayColumnType.DATE]: normalize_date,
+	[ArrayColumnType.DATE]: normalize_array(normalize_date),
 	[ScalarColumnType.TIMESTAMP]: normalize_timestamp,
-	[ArrayColumnType.TIMESTAMP]: normalize_timestamp,
+	[ArrayColumnType.TIMESTAMP]: normalize_array(normalize_timestamp),
 	[ScalarColumnType.TIMESTAMPTZ]: normalize_timestampz,
-	[ArrayColumnType.TIMESTAMPTZ]: normalize_timestampz,	
+	[ArrayColumnType.TIMESTAMPTZ]: normalize_array(normalize_timestampz),
 	[ScalarColumnType.MONEY]: normalize_money,
-	// [ArrayColumnType.MONEY]]: normalize_money,
 	[ScalarColumnType.JSON]: toJson,
-	[ArrayColumnType.JSON]: toJson,
 	[ScalarColumnType.JSONB]: toJson,
-	[ArrayColumnType.JSONB]: toJson,
 	[ScalarColumnType.BYTEA]: convertBytes,
-	[ArrayColumnType.BYTEA]: convertBytes,
+	[ArrayColumnType.BYTEA]: normalize_array(convertBytes),
 };
 
 // https://github.com/brianc/node-postgres/pull/2930
