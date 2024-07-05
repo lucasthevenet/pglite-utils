@@ -1,5 +1,11 @@
 # pglite-prisma-adapter
 
+## 0.2.0
+
+### Minor Changes
+
+- 2c1ed81: fixed parsing for array types #11
+
 ## 0.1.3
 
 ### Patch Changes
