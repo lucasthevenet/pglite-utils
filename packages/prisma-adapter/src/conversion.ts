@@ -1,4 +1,4 @@
-import { types, type ParserOptions } from "@electric-sql/pglite";
+import { type ParserOptions, types } from "@electric-sql/pglite";
 import { type ColumnType, ColumnTypeEnum } from "@prisma/driver-adapter-utils";
 
 const ScalarColumnType = types;
