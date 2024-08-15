@@ -1,12 +1,13 @@
 {
   "name": "sandbox",
+  "type": "module",
   "version": "0.0.7",
   "private": true,
   "descriptions": "Smoke tests for the Prisma adapter",
   "main": "index.js",
   "scripts": {
     "test": "tsx src/pglite.ts",
-    "cmd": "pglite prisma db push",
+    "cmd": "pglite-cli prisma db push",
     "postinstall": "prisma generate"
   },
   "dependencies": {

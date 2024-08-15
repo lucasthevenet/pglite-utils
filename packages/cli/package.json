@@ -7,8 +7,8 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.cts",
   "bin": {
-      "pglite-cli": "./dist/cli.cjs",
-      "pglite": "./dist/cli.cjs"
+    "pglite-cli": "./dist/cli.js",
+    "pglite": "./dist/cli.js"
   },
   "exports": {
     "require": {
