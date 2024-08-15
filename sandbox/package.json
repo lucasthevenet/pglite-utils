@@ -1,25 +1,27 @@
 {
-    "name": "sandbox",
-    "version": "0.0.5",
-    "private": true,
-    "descriptions": "Smoke tests for the Prisma adapter",
-    "main": "index.js",
-    "scripts": {
-        "test": "tsx src/pglite.ts",
-        "postinstall": "prisma generate"
-    },
-    "dependencies": {
-        "@electric-sql/pglite": "^0.1.5",
-        "@prisma/client": "5.14.0",
-        "@prisma/driver-adapter-utils": "5.14.0",
-        "pglite-prisma-adapter": "workspace:*",
-        "superjson": "^2.2.0"
-    },
-    "devDependencies": {
-        "@types/node": "^20.12.12",
-        "prisma": "5.14.0",
-        "tsx": "4.1.2",
-        "typescript": "^5.2.2",
-        "vitest": "^1.6.0"
-    }
+  "name": "sandbox",
+  "version": "0.0.5",
+  "private": true,
+  "descriptions": "Smoke tests for the Prisma adapter",
+  "main": "index.js",
+  "scripts": {
+    "test": "tsx src/pglite.ts",
+    "cmd": "pglite prisma db push",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.2.0",
+    "@prisma/client": "5.14.0",
+    "@prisma/driver-adapter-utils": "5.14.0",
+    "pglite-prisma-adapter": "workspace:*",
+    "pglite-cli": "workspace:*",
+    "superjson": "^2.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.2.0",
+    "prisma": "5.14.0",
+    "tsx": "4.1.2",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
+  }
 }

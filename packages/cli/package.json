@@ -1,0 +1,69 @@
+{
+  "name": "pglite-cli",
+  "version": "0.1.3",
+  "description": "CLI for pglite",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.cts",
+  "bin": {
+      "pglite-cli": "./dist/cli.cjs",
+      "pglite": "./dist/cli.cjs"
+  },
+  "exports": {
+    "require": {
+      "types": "./dist/index.d.cts",
+      "default": "./dist/index.cjs"
+    },
+    "import": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "scripts": {
+    "build": "pkgroll",
+    "clean": "rm -rf .turbo node_modules dist",
+    "lint": "biome check ./src",
+    "typecheck": "tsc --noEmit"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "keywords": [
+    "pglite",
+    "electric-sql",
+    "serverless",
+    "PostgreSQL",
+    "edge",
+    "Vercel",
+    "Cloudflare",
+    "Netlify",
+    "Bun",
+    "Deno",
+    "database",
+    "SQL",
+    "Prisma"
+  ],
+  "author": "Lucas Thevenet <lcervantes@dc.uba.ar>",
+  "license": "Apache-2.0",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "execa": "^9.3.0",
+    "commander": "^12.1.0",
+    "get-port": "^7.1.0",
+    "pg-gateway": "^0.3.0-alpha.6"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.2.0",
+    "@types/node": "^22.2.0",
+    "pkgroll": "2.1.1",
+    "typescript": "^5.5.4"
+  },
+  "peerDependencies": {
+    "@electric-sql/pglite": ">= 0.1.5"
+  }
+}
