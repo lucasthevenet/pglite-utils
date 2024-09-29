@@ -3,7 +3,8 @@ import { Command } from "commander";
 import { execaCommand } from "execa";
 import getPort, { portNumbers } from "get-port";
 import { createServer } from "node:net";
-import { PostgresConnection } from "pg-gateway";
+import { fromNodeSocket } from "pg-gateway/node";
+import { createPreHashedPassword } from "pg-gateway";
 
 const program = new Command().enablePositionalOptions();
 program
@@ -18,7 +19,6 @@ program
     // Create a TCP server
     const server = createServer((socket) => {
       // `PostgresConnection` will manage the protocol lifecycle
-      const connection = new PostgresConnection(socket);
       console.log("\u{1F464} Client connected, IP: ", socket.remoteAddress);
     });
 
@@ -33,12 +33,12 @@ program
     const { port } = await createPGServer(db, 5433);
     const { port: shadow_port } = await createPGServer(shadow_db, 5434);
     await createMigrationsTable(db);
-    await execaCommand(["npx", "prisma", ...cmd.args].join(" "), {
+    await execaCommand(["prisma", ...cmd.args].join(" "), {
       stdio: "inherit",
       env: {
         ...process.env,
-        DATABASE_URL: `postgresql://postgres@localhost:${port}/postgres?schema=public`,
-        SHADOW_DATABASE_URL: `postgresql://postgres@localhost:${shadow_port}/postgres?schema=public`,
+        DATABASE_URL: `postgresql://postgres:postgres@localhost:${port}/postgres?schema=public`,
+        SHADOW_DATABASE_URL: `postgresql://postgres:postgres@localhost:${shadow_port}/postgres?schema=public`,
       },
     });
   });
@@ -63,14 +63,40 @@ async function createPGServer(
   port: number;
   db: PGlite;
 }> {
-  await db.waitReady;
-  const server = createServer((socket) => {
+  const server = createServer(async (socket) => {
     // `PostgresConnection` will manage the protocol lifecycle
-    const connection = new PostgresConnection(socket);
+    const connection = await fromNodeSocket(socket, {
+      serverVersion: "16.3 (PGlite 0.2.0)",
+      auth: {
+        method: "md5",
+        getPreHashedPassword: async ({ username }) => {
+          return createPreHashedPassword(username, "postgres");
+        },
+      },
+      async onStartup() {
+        // Wait for PGlite to be ready before further processing
+        await db.waitReady;
+      },
+      async onMessage(data, { isAuthenticated }) {
+        // Only forward messages to PGlite after authentication
+        if (!isAuthenticated) {
+          return;
+        }
+
+        // Forward raw message to PGlite and send response to client
+        return await db.execProtocolRaw(data);
+      },
+    });
+
+    socket.on("end", () => {
+      console.log("Client disconnected");
+    });
   });
+
   const port = await getPort({
     port: portNumbers(desiredPort, desiredPort + 100),
   });
+
   return new Promise((resolve, reject) => {
     server.listen(port, async () => {
       console.log("Server started on port", port);

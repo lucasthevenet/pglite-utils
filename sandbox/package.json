@@ -7,15 +7,18 @@
   "main": "index.js",
   "scripts": {
     "test": "tsx src/pglite.ts",
-    "cmd": "pglite-cli prisma db push",
+    "prisma:push": "pglite-cli prisma db push",
+    "prisma:pull": "pglite-cli prisma db pull",
+    "prisma:migrate": "pglite-cli prisma migrate reset",
     "postinstall": "prisma generate"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.2.0",
     "@prisma/client": "5.14.0",
     "@prisma/driver-adapter-utils": "5.14.0",
-    "pglite-prisma-adapter": "workspace:*",
+    "pg-protocol": "^1.6.1",
     "pglite-cli": "workspace:*",
+    "pglite-prisma-adapter": "workspace:*",
     "superjson": "^2.2.1"
   },
   "devDependencies": {

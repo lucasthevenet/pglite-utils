@@ -52,13 +52,13 @@
     "access": "public"
   },
   "dependencies": {
-    "execa": "^9.3.0",
     "commander": "^12.1.0",
+    "execa": "^9.3.0",
     "get-port": "^7.1.0",
-    "pg-gateway": "^0.3.0-alpha.6"
+    "pg-gateway": "^0.3.0-beta.2"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "^0.2.0",
+    "@electric-sql/pglite": "^0.2.8",
     "@types/node": "^22.2.0",
     "pkgroll": "2.1.1",
     "typescript": "^5.5.4"

@@ -67,12 +67,12 @@ importers:
         specifier: ^7.1.0
         version: 7.1.0
       pg-gateway:
-        specifier: ^0.3.0-alpha.6
-        version: 0.3.0-alpha.6
+        specifier: ^0.3.0-beta.2
+        version: 0.3.0-beta.2
     devDependencies:
       '@electric-sql/pglite':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.2.6
+        version: 0.2.6
       '@types/node':
         specifier: ^22.2.0
         version: 22.2.0
@@ -113,6 +113,9 @@ importers:
       '@prisma/driver-adapter-utils':
         specifier: 5.14.0
         version: 5.14.0
+      pg-protocol:
+        specifier: ^1.6.1
+        version: 1.6.1
       pglite-cli:
         specifier: workspace:*
         version: link:../packages/cli
@@ -841,6 +844,10 @@ packages:
 
   /@electric-sql/pglite@0.2.0:
     resolution: {integrity: sha512-9ckSTnr9ChwY03lojiHM3HIOKFen72koxo44hb94Qz/L9fNejg1riwbfl2ROghA/z4ntCuyT+Zwl5pkbrSX3Aw==}
+
+  /@electric-sql/pglite@0.2.6:
+    resolution: {integrity: sha512-tyWWxj1Z1Pd4BqBZL1ER2SXaCn5s9N0bxTQCAkGaaWe8r9EEe1bNs20RAG3/+ZeBJtDrk8y5xjocactL+4aIXg==}
+    dev: true
 
   /@esbuild/aix-ppc64@0.20.2:
     resolution: {integrity: sha512-D+EBOJHXdNZcLJRBkhENNG8Wji2kgc9AZ9KiPr1JuZjsNtyHzrsfLRrY0tk2H2aoFu6RANO1y1iPPUCDYWkb5g==}
@@ -5593,8 +5600,12 @@ packages:
     resolution: {integrity: sha512-xCy9V055GLEqoFaHoC1SoLIaLmWctgCUaBaWxDZ7/Zx4CTyX7cJQLJOok/orfjZAh9kEYpjJa4d0KcJmCbctZA==}
     dev: false
 
-  /pg-gateway@0.3.0-alpha.6:
-    resolution: {integrity: sha512-Av2ujUOokVw1O+P4AtBYek4Np7/2O7bZ9clRVYlCPCeD+NbHj026u+uoiropipsFbf7QyQktJylqbz1aRPGOfA==}
+  /pg-gateway@0.3.0-beta.2:
+    resolution: {integrity: sha512-2W3fPfNZigpMNxv/7ieB5TNOx+i7hZVZ+zPWVs1tKifszV2/O5NRd72U3hYTsLmwJmo5djbM0r62KkwRsVAW+g==}
+    dev: false
+
+  /pg-protocol@1.6.1:
+    resolution: {integrity: sha512-jPIlvgoD63hrEuihvIg+tJhoGjUsLPn6poJY9N5CnlPd91c2T18T/9zBtLxZSb1EhYxBRoZJtzScCaWlYLtktg==}
     dev: false
 
   /picocolors@1.0.1:
