@@ -3,7 +3,7 @@
   "engines": {
     "node": ">=20.12.0"
   },
-  "packageManager": "pnpm@8.15.4",
+  "packageManager": "pnpm@9.11.0",
   "scripts": {
     "build": "turbo run build",
     "test": "turbo run test",
@@ -17,9 +17,9 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.7.3",
-    "@changesets/cli": "^2.27.5",
-    "turbo": "^2.0.1",
-    "typescript": "^5.4.5"
+    "@changesets/cli": "^2.27.8",
+    "turbo": "^2.1.2",
+    "typescript": "^5.6.2"
   },
   "name": "pglite-utils"
 }
