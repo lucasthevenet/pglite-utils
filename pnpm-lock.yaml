@@ -77,7 +77,7 @@ importers:
   sandbox:
     dependencies:
       '@electric-sql/pglite':
-        specifier: ^0.2.2
+        specifier: ^0.2.9
         version: 0.2.9
       '@prisma/client':
         specifier: 5.20.0
