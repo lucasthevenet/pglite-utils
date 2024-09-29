@@ -10,17 +10,17 @@
     "db:init": "pnpm dlx tsx prisma/initialize.ts"
   },
   "dependencies": {
-    "@auth/core": "^0.32.0",
-    "@auth/prisma-adapter": "^2.2.0",
-    "@electric-sql/pglite": "^0.1.5",
-    "@prisma/client": "5.14.0",
-    "nuxt": "^3.11.2",
+    "@auth/core": "^0.35.3",
+    "@auth/prisma-adapter": "^2.5.3",
+    "@electric-sql/pglite": "^0.2.9",
+    "@prisma/client": "5.20.0",
+    "nuxt": "^3.13.2",
     "pathe": "^1.1.2",
     "pglite-prisma-adapter": "workspace:^",
-    "vue": "^3.4.27",
-    "vue-router": "^4.3.2"
+    "vue": "^3.5.10",
+    "vue-router": "^4.4.5"
   },
   "devDependencies": {
-    "prisma": "5.14.0"
+    "prisma": "5.20.0"
   }
 }
