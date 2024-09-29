@@ -1,31 +1,26 @@
 {
   "name": "sandbox",
-  "type": "module",
   "version": "0.0.7",
   "private": true,
   "descriptions": "Smoke tests for the Prisma adapter",
   "main": "index.js",
   "scripts": {
     "test": "tsx src/pglite.ts",
-    "prisma:push": "pglite-cli prisma db push",
-    "prisma:pull": "pglite-cli prisma db pull",
-    "prisma:migrate": "pglite-cli prisma migrate reset",
     "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@electric-sql/pglite": "^0.2.0",
-    "@prisma/client": "5.14.0",
-    "@prisma/driver-adapter-utils": "5.14.0",
-    "pg-protocol": "^1.6.1",
-    "pglite-cli": "workspace:*",
+    "@electric-sql/pglite": "^0.2.9",
+    "@prisma/client": "5.20.0",
+    "@prisma/driver-adapter-utils": "5.20.0",
     "pglite-prisma-adapter": "workspace:*",
     "superjson": "^2.2.1"
   },
   "devDependencies": {
-    "@types/node": "^22.2.0",
-    "prisma": "5.14.0",
+    "@types/node": "^20.12.12",
+    "prisma": "5.20.0",
     "tsx": "4.1.2",
-    "typescript": "^5.5.4",
-    "vitest": "^2.0.5"
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.1"
   }
 }
+

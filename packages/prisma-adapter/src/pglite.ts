@@ -8,6 +8,7 @@ import type {
 	Result,
 	ResultSet,
 	Transaction,
+	TransactionContext,
 	TransactionOptions,
 } from "@prisma/driver-adapter-utils";
 import { Debug, err, ok } from "@prisma/driver-adapter-utils";
@@ -132,14 +133,50 @@ class PGliteTransaction
 	async commit(): Promise<Result<void>> {
 		debug("[js::commit]");
 		this.txDeferred.resolve();
-		return Promise.resolve(ok(await this.txResultPromise));
+		return ok(await this.txResultPromise);
 	}
 
 	async rollback(): Promise<Result<void>> {
 		debug("[js::rollback]");
 		this.client.rollback();
 		this.txDeferred.resolve();
-		return Promise.resolve(ok(await this.txResultPromise));
+		return ok(await this.txResultPromise);
+	}
+}
+
+class PGliteTransactionContext
+	extends PGliteQueryable<pglite.PGlite>
+	implements TransactionContext
+{
+	constructor(readonly conn: pglite.PGlite) {
+		super(conn);
+	}
+
+	async startTransaction(): Promise<Result<Transaction>> {
+		const options: TransactionOptions = {
+			usePhantomQuery: true,
+		};
+
+		const tag = "[js::startTransaction]";
+		debug("%s options: %O", tag, options);
+
+		return new Promise<Result<Transaction>>((resolve, reject) => {
+			const txResultPromise = this.conn
+				.transaction(async (tx) => {
+					const [txDeferred, deferredPromise] = createDeferred<void>();
+					const txWrapper = new PGliteTransaction(
+						tx,
+						options,
+						txDeferred,
+						txResultPromise,
+					);
+					resolve(ok(txWrapper));
+					return deferredPromise;
+				})
+				.catch((error) => {
+					return reject(error);
+				});
+		});
 	}
 }
 
@@ -169,30 +206,8 @@ export class PrismaPGlite
 		});
 	}
 
-	async startTransaction(): Promise<Result<Transaction>> {
-		const options: TransactionOptions = {
-			usePhantomQuery: false,
-		};
-
-		const tag = "[js::startTransaction]";
-		debug(`${tag} options: %O`, options);
-
-		return new Promise<Result<Transaction>>((resolve, reject) => {
-			const txResultPromise = this.client
-				.transaction(async (tx) => {
-					const [txDeferred, deferredPromise] = createDeferred<void>();
-					const txWrapper = new PGliteTransaction(
-						tx,
-						options,
-						txDeferred,
-						txResultPromise,
-					);
-					resolve(ok(txWrapper));
-					return deferredPromise;
-				})
-				.catch((error) => {
-					return reject(error);
-				});
-		});
+	async transactionContext(): Promise<Result<TransactionContext>> {
+		await this.client.waitReady;
+		return ok(new PGliteTransactionContext(this.client));
 	}
 }

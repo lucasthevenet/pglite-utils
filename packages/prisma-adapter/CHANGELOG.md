@@ -1,5 +1,11 @@
 # pglite-prisma-adapter
 
+## 0.3.0
+
+### Minor Changes
+
+- bfe83ae: Added changes for compatibility with Prisma's new TransactionContext
+
 ## 0.2.0
 
 ### Minor Changes
