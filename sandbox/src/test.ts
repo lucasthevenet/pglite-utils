@@ -69,7 +69,7 @@ class SmokeTest {
     await this.prisma.product.deleteMany({});
   }
 
-  async transactionsWithConflits() {
+  async transactionsWithConflicts() {
     await this.prisma.leak_test.deleteMany();
 
     const one = async () => {
