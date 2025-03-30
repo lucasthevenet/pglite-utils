@@ -20,7 +20,7 @@ export async function smokeTest(adapter: DriverAdapter) {
   await test.testTypeTest2();
   await test.$raw();
   await test.testFindManyTypeTest();
-  await test.transactionsWithConflits();
+  await test.transactionsWithConflicts();
   await test.testCreateAndDeleteChildParent();
   await test.interactiveTransactions();
   await test.explicitTransaction();
