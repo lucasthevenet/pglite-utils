@@ -181,11 +181,6 @@ export class PrismaPGlite
   implements DriverAdapter
 {
   constructor(client: pglite.PGlite, private options?: PrismaPGliteOptions) {
-    if (!(client instanceof pglite.PGlite)) {
-      throw new TypeError(
-        "PrismaPGlite must be initialized with an instance of PGlite"
-      );
-    }
     super(client);
   }
 
