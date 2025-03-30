@@ -1,4 +1,11 @@
 packages:
-  - 'packages/*'
-  - 'sandbox'
-  - 'examples/*'
+  - packages/*
+  - sandbox
+  - examples/*
+onlyBuiltDependencies:
+  - '@biomejs/biome'
+  - '@parcel/watcher'
+  - '@prisma/client'
+  - '@prisma/engines'
+  - esbuild
+  - prisma
