@@ -333,6 +333,7 @@ function convertBytes(serializedBytes: string): number[] {
 }
 
 export const customParsers: ParserOptions = {
+	[ScalarColumnType.INT8]: normalize_numeric,
 	[ScalarColumnType.NUMERIC]: normalize_numeric,
 	[ScalarColumnType.TIME]: normalize_time,
 	[ScalarColumnType.TIMETZ]: normalize_timez,
