@@ -1,5 +1,11 @@
 # pglite-prisma-adapter
 
+## 0.4.1
+
+### Patch Changes
+
+- 6c256ef: fix: Handle large numbers in `BigInt` columns correctly by @osaton in #23
+
 ## 0.4.0
 
 ### Minor Changes
