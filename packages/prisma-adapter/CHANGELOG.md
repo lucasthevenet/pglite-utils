@@ -1,5 +1,11 @@
 # pglite-prisma-adapter
 
+## 0.5.0
+
+### Minor Changes
+
+- 3cbb4a1: fix: Updated adapter implementation to be compatible with @prisma/client >= 6.5.0. #25
+
 ## 0.4.1
 
 ### Patch Changes
