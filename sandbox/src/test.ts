@@ -1,9 +1,9 @@
 import superjson from "superjson";
-import { PrismaClient } from ".prisma/client";
+import { PrismaClient, Prisma } from ".prisma/client";
 import { setImmediate, setTimeout } from "node:timers/promises";
-import type { DriverAdapter } from "@prisma/driver-adapter-utils";
+import type { SqlDriverAdapterFactory } from "@prisma/driver-adapter-utils";
 
-export async function smokeTest(adapter: DriverAdapter) {
+export async function smokeTest(adapter: SqlDriverAdapterFactory) {
   // wait for the database pool to be initialized
   await setImmediate(0);
 
@@ -16,11 +16,17 @@ export async function smokeTest(adapter: DriverAdapter) {
 
   const test = new SmokeTest(prisma, adapter.provider);
 
+  console.log(
+    await prisma.$queryRaw(
+      Prisma.sql`SELECT table_schema, table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE' ORDER BY table_name`,
+    ),
+  );
+
   await test.testJSON();
   await test.testTypeTest2();
   await test.$raw();
   await test.testFindManyTypeTest();
-  await test.transactionsWithConflicts();
+  await test.transactionsWithConflits();
   await test.testCreateAndDeleteChildParent();
   await test.interactiveTransactions();
   await test.explicitTransaction();
@@ -43,7 +49,7 @@ export async function smokeTest(adapter: DriverAdapter) {
 class SmokeTest {
   constructor(
     private readonly prisma: PrismaClient,
-    readonly provider: DriverAdapter["provider"]
+    readonly provider: SqlDriverAdapterFactory["provider"],
   ) {}
 
   async testJSON() {
@@ -69,7 +75,7 @@ class SmokeTest {
     await this.prisma.product.deleteMany({});
   }
 
-  async transactionsWithConflicts() {
+  async transactionsWithConflits() {
     await this.prisma.leak_test.deleteMany();
 
     const one = async () => {
@@ -94,7 +100,7 @@ class SmokeTest {
       [this.prisma.child.findMany(), this.prisma.child.count()],
       {
         isolationLevel: "Serializable",
-      }
+      },
     );
 
     console.log("[nodejs] children", superjson.serialize(children).json);
@@ -166,10 +172,6 @@ class SmokeTest {
   }
 
   async testFindManyTypeTest() {
-    await this.testFindManyTypeTestPostgres();
-  }
-
-  private async testFindManyTypeTestPostgres() {
     if (this.provider !== "postgres") {
       return;
     }
@@ -196,7 +198,7 @@ class SmokeTest {
     });
     console.log(
       "[nodejs] findMany resultSet",
-      superjson.serialize(resultSet).json
+      superjson.serialize(resultSet).json,
     );
 
     return resultSet;
@@ -237,7 +239,7 @@ class SmokeTest {
     });
     console.log(
       "[nodejs] resultDeleteMany",
-      superjson.serialize(resultDeleteMany).json
+      superjson.serialize(resultDeleteMany).json,
     );
   }
 }

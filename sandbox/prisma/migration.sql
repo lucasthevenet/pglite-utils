@@ -17,8 +17,8 @@ CREATE TABLE "type_test" (
     "float_column_null" REAL,
     "double_column" DOUBLE PRECISION NOT NULL,
     "double_column_null" DOUBLE PRECISION,
-    "decimal_column" DECIMAL(10,2) NOT NULL,
-    "decimal_column_null" DECIMAL(10,2),
+    "decimal_column" DECIMAL(10, 2) NOT NULL,
+    "decimal_column_null" DECIMAL(10, 2),
     "boolean_column" BOOLEAN NOT NULL,
     "boolean_column_null" BOOLEAN,
     "char_column" CHAR(10) NOT NULL,
@@ -39,7 +39,6 @@ CREATE TABLE "type_test" (
     "json_column_null" JSONB,
     "enum_column" "type_test_enum_column" NOT NULL,
     "enum_column_null" "type_test_enum_column_null",
-
     CONSTRAINT "type_test_pkey" PRIMARY KEY ("id")
 );
 
@@ -48,7 +47,6 @@ CREATE TABLE "type_test_2" (
     "id" TEXT NOT NULL,
     "datetime_column" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "datetime_column_null" TIMESTAMP(3),
-
     CONSTRAINT "type_test_2_pkey" PRIMARY KEY ("id")
 );
 
@@ -60,7 +58,6 @@ CREATE TABLE "Child" (
     "parentId" TEXT,
     "non_unique" TEXT,
     "id" TEXT NOT NULL,
-
     CONSTRAINT "Child_pkey" PRIMARY KEY ("id")
 );
 
@@ -71,7 +68,6 @@ CREATE TABLE "Parent" (
     "p_2" TEXT NOT NULL,
     "non_unique" TEXT,
     "id" TEXT NOT NULL,
-
     CONSTRAINT "Parent_pkey" PRIMARY KEY ("id")
 );
 
@@ -81,7 +77,6 @@ CREATE TABLE "authors" (
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "age" INTEGER NOT NULL,
-
     CONSTRAINT "authors_pkey" PRIMARY KEY ("id")
 );
 
@@ -91,7 +86,6 @@ CREATE TABLE "Post" (
     "title" TEXT,
     "published" BOOLEAN NOT NULL DEFAULT false,
     "authorId" INTEGER,
-
     CONSTRAINT "Post_pkey" PRIMARY KEY ("id")
 );
 
@@ -100,35 +94,32 @@ CREATE TABLE "Product" (
     "id" TEXT NOT NULL,
     "properties" JSONB NOT NULL,
     "properties_null" JSONB,
-
     CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "leak_test" (
     "id" TEXT NOT NULL,
-
     CONSTRAINT "leak_test_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Child_c_key" ON "Child"("c");
+CREATE UNIQUE INDEX "Child_c_key" ON "Child" ("c");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Child_parentId_key" ON "Child"("parentId");
+CREATE UNIQUE INDEX "Child_parentId_key" ON "Child" ("parentId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Child_c_1_c_2_key" ON "Child"("c_1", "c_2");
+CREATE UNIQUE INDEX "Child_c_1_c_2_key" ON "Child" ("c_1", "c_2");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Parent_p_key" ON "Parent"("p");
+CREATE UNIQUE INDEX "Parent_p_key" ON "Parent" ("p");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Parent_p_1_p_2_key" ON "Parent"("p_1", "p_2");
+CREATE UNIQUE INDEX "Parent_p_1_p_2_key" ON "Parent" ("p_1", "p_2");
 
 -- CreateIndex
-CREATE INDEX "author_id" ON "Post"("authorId");
+CREATE INDEX "author_id" ON "Post" ("authorId");
 
 -- AddForeignKey
-ALTER TABLE "Post" ADD CONSTRAINT "Post_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "authors"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
+ALTER TABLE "Post" ADD CONSTRAINT "Post_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "authors" ("id") ON DELETE SET NULL ON UPDATE CASCADE;
