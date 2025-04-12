@@ -58,7 +58,7 @@ importers:
   packages/prisma-adapter:
     dependencies:
       '@prisma/client':
-        specifier: '>= 6.6.0'
+        specifier: '>= 6.5.0'
         version: 6.6.0(prisma@6.6.0(typescript@5.8.2))(typescript@5.8.2)
       '@prisma/driver-adapter-utils':
         specifier: ^6.6.0
