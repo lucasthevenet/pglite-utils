@@ -2,12 +2,13 @@ import * as pglite from "@electric-sql/pglite";
 import type {
 	ColumnType,
 	ConnectionInfo,
-	DriverAdapter,
+	IsolationLevel,
+	SqlDriverAdapter,
+	SqlMigrationAwareDriverAdapterFactory,
 	SqlQuery,
 	SqlQueryable,
 	SqlResultSet,
 	Transaction,
-	TransactionContext,
 	TransactionOptions,
 } from "@prisma/driver-adapter-utils";
 import { Debug, DriverAdapterError } from "@prisma/driver-adapter-utils";
@@ -136,24 +137,59 @@ class PGliteTransaction
 	}
 }
 
-class PGliteTransactionContext
+export type PrismaPGliteOptions = {
+	schema?: string;
+};
+
+class PrismaPGliteAdapter
 	extends PGliteQueryable<pglite.PGlite>
-	implements TransactionContext
+	implements SqlDriverAdapter
 {
-	constructor(readonly conn: pglite.PGlite) {
-		super(conn);
+	constructor(
+		client: pglite.PGlite,
+		private options?: PrismaPGliteOptions,
+	) {
+		super(client);
 	}
 
-	async startTransaction(): Promise<Transaction> {
+	executeScript(script: string): Promise<void> {
+		try {
+			this.client.exec(script);
+		} catch (e) {
+			this.onError(e);
+		}
+		return Promise.resolve();
+	}
+
+	getConnectionInfo(): ConnectionInfo {
+		return {
+			schemaName: this.options?.schema,
+		};
+	}
+
+	async startTransaction(
+		isolationLevel?: IsolationLevel,
+	): Promise<Transaction> {
 		const options: TransactionOptions = {
 			usePhantomQuery: true,
 		};
 
 		const tag = "[js::startTransaction]";
 		debug("%s options: %O", tag, options);
+		if (isolationLevel) {
+			await this.client
+				.exec(`SET TRANSACTION ISOLATION LEVEL ${isolationLevel}`)
+				.catch((error) => this.onError(error));
+		}
+		return this.startTransactionInner(this.client, options);
+	}
 
+	async startTransactionInner(
+		conn: pglite.PGlite,
+		options: TransactionOptions,
+	): Promise<Transaction> {
 		return new Promise<Transaction>((resolve, reject) => {
-			const txResultPromise = this.conn
+			const txResultPromise = conn
 				.transaction(async (tx) => {
 					const [txDeferred, deferredPromise] = createDeferred<void>();
 					const txWrapper = new PGliteTransaction(
@@ -170,41 +206,30 @@ class PGliteTransactionContext
 				});
 		});
 	}
-}
-
-export type PrismaPGliteOptions = {
-	schema?: string;
-};
-
-export class PrismaPGlite
-	extends PGliteQueryable<pglite.PGlite>
-	implements DriverAdapter
-{
-	constructor(
-		client: pglite.PGlite,
-		private options?: PrismaPGliteOptions,
-	) {
-		super(client);
-	}
-
-	executeScript(_script: string): Promise<void> {
-		throw new Error("Not implemented yet");
-	}
-
-	getConnectionInfo(): ConnectionInfo {
-		return {
-			schemaName: this.options?.schema,
-		};
-	}
-
-	async transactionContext(): Promise<TransactionContext> {
-		await this.client.waitReady;
-		return new PGliteTransactionContext(this.client);
-	}
 
 	async dispose(): Promise<void> {
-		// if (!this.client.closed) {
-		//   await this.client.close();
-		// }
+		// return this.client.close();
+		return Promise.resolve();
+	}
+}
+
+export class PrismaPGliteAdapterFactory
+	implements SqlMigrationAwareDriverAdapterFactory
+{
+	readonly provider = "postgres";
+	readonly adapterName = packageName;
+
+	constructor(private readonly client: pglite.PGlite) {}
+
+	connect(): Promise<SqlDriverAdapter> {
+		return Promise.resolve(new PrismaPGliteAdapter(this.client));
+	}
+
+	connectToShadowDb(): Promise<SqlDriverAdapter> {
+		return Promise.resolve(
+			new PrismaPGliteAdapter(
+				new pglite.PGlite({ dataDir: "memory://shadow" }),
+			),
+		);
 	}
 }

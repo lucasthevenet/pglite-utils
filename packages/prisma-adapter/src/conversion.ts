@@ -1,7 +1,11 @@
 import { type ParserOptions, types } from "@electric-sql/pglite";
 import { type ColumnType, ColumnTypeEnum } from "@prisma/driver-adapter-utils";
+import { parse as parseArray } from "postgres-array";
 
-const ScalarColumnType = types;
+const ScalarColumnType = {
+	...types,
+	NAME: 19,
+} as const;
 
 /**
  * PostgreSQL array column types (not defined in ScalarColumnType).
@@ -197,7 +201,10 @@ export function fieldToColumnType(fieldTypeId: number): ColumnType {
 		case ScalarColumnType.INET:
 		case ScalarColumnType.CIDR:
 		case ScalarColumnType.XML:
+		case ScalarColumnType.NAME:
 			return ColumnTypeEnum.Text;
+		case ScalarColumnType.CHAR:
+			return ColumnTypeEnum.Character;
 		case ScalarColumnType.BYTEA:
 			return ColumnTypeEnum.Bytes;
 		case ArrayColumnType.INT2:
@@ -240,7 +247,7 @@ export function fieldToColumnType(fieldTypeId: number): ColumnType {
 function normalize_array<T>(
 	element_normalizer: (string: string) => T,
 ): (string: string) => T[] {
-	return (str) => types.parseArray(str, element_normalizer);
+	return (str) => parseArray(str, element_normalizer);
 }
 
 /****************************/

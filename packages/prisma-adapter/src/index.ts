@@ -1,1 +1,1 @@
-export { PrismaPGlite } from "./pglite";
+export { PrismaPGliteAdapterFactory as PrismaPGlite } from "./pglite";

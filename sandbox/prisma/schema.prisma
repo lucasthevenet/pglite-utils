@@ -6,7 +6,7 @@ generator client {
 
 datasource db {
   provider = "postgres"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://localhost:5433/mydb"
 }
 
 model type_test {
