@@ -58,6 +58,6 @@
   },
   "peerDependencies": {
     "@electric-sql/pglite": ">=0.2.0",
-    "@prisma/client": ">= 6.6.0"
+    "@prisma/client": ">= 6.5.0"
   }
 }
