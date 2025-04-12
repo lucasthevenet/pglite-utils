@@ -8,7 +8,7 @@
     "test": "tsx src/pglite.ts",
     "clean": "rm -rf .turbo node_modules .pglite",
     "lint": "biome check ./src",
-    "postinstall": "prisma generate"
+    "pretest": "prisma generate"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.2.17",
