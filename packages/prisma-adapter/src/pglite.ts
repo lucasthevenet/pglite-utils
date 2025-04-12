@@ -208,7 +208,8 @@ class PrismaPGliteAdapter
 	}
 
 	async dispose(): Promise<void> {
-		return this.client.close();
+		// return this.client.close();
+		return Promise.resolve();
 	}
 }
 

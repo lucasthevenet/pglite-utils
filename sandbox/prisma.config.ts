@@ -13,7 +13,14 @@ export default {
 
   migrate: {
     async adapter() {
-      return new PrismaPGlite(new PGlite({ dataDir: ".pglite" }));
+      const client = await PGlite.create({ dataDir: ".pglite" });
+      return new PrismaPGlite(client);
+    },
+  },
+  studio: {
+    async adapter() {
+      const client = await PGlite.create({ dataDir: ".pglite" });
+      return new PrismaPGlite(client);
     },
   },
 } satisfies PrismaConfig<Env>;
