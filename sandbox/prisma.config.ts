@@ -12,7 +12,7 @@ export default {
   schema: path.join("prisma", "schema.prisma"),
 
   migrate: {
-    async adapter(env) {
+    async adapter() {
       return new PrismaPGlite(new PGlite({ dataDir: ".pglite" }));
     },
   },
