@@ -47,6 +47,7 @@ CREATE TABLE "type_test_2" (
     "id" TEXT NOT NULL,
     "datetime_column" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "datetime_column_null" TIMESTAMP(3),
+    "bigint_column" BIGINT NOT NULL DEFAULT 0,
     CONSTRAINT "type_test_2_pkey" PRIMARY KEY ("id")
 );
 

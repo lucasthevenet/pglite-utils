@@ -50,6 +50,7 @@ model type_test_2 {
   id                   String    @id @default(cuid())
   datetime_column      DateTime  @default(now()) @db.Timestamp(3)
   datetime_column_null DateTime? @db.Timestamp(3)
+  bigint_column        BigInt    @default(0)
 }
 
 model Child {

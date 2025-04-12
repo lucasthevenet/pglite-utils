@@ -30,6 +30,7 @@ export async function smokeTest(adapter: SqlDriverAdapterFactory) {
   await test.testCreateAndDeleteChildParent();
   await test.interactiveTransactions();
   await test.explicitTransaction();
+  await test.testBigInt();
 
   console.log("[nodejs] disconnecting...");
   await prisma.$disconnect();
@@ -241,5 +242,20 @@ class SmokeTest {
       "[nodejs] resultDeleteMany",
       superjson.serialize(resultDeleteMany).json,
     );
+  }
+
+  async testBigInt() {
+    const result = await this.prisma.type_test_2.create({
+      data: {
+        bigint_column: 9223372036854775807n,
+      },
+    });
+
+
+    if (typeof result.bigint_column === "bigint") {
+      console.log("[nodejs] bigint_column is a bigint");
+    }
+
+    console.log("[nodejs] testBigInt result", superjson.serialize(result).json);
   }
 }

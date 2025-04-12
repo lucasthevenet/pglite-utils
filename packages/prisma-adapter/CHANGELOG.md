@@ -1,5 +1,18 @@
 # pglite-prisma-adapter
 
+## 0.4.1
+
+### Patch Changes
+
+- 6c256ef: fix: Handle large numbers in `BigInt` columns correctly by @osaton in #23
+
+## 0.4.0
+
+### Minor Changes
+
+- bccfa68: - Added missing methods to adapter implementation
+  - `@prisma/client` >= 6.5.0 is now required to use this new version
+
 ## 0.3.0
 
 ### Minor Changes

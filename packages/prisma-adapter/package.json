@@ -1,6 +1,6 @@
 {
   "name": "pglite-prisma-adapter",
-  "version": "0.3.0",
+  "version": "0.4.1",
   "description": "Prisma's driver adapter for \"@electric-sql/pglite\"",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
