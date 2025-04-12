@@ -6,6 +6,8 @@
   "main": "index.js",
   "scripts": {
     "test": "tsx src/pglite.ts",
+    "clean": "rm -rf .turbo node_modules .pglite",
+    "lint": "biome check ./src",
     "postinstall": "prisma generate"
   },
   "dependencies": {
