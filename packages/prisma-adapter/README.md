@@ -23,12 +23,12 @@ Set the environment to your .env file in the local environment.
 
 ```env
 // .env
-DATABASE_URL="./some/path"
+DATABASE_DIR="./some/path"
 ```
 
 > NOTE
-> 
-> The adapter only supports Prisma Client. Prisma migration and introspection are not supported, though I want to make a cli tool to help with that in the future.
+>
+> The adapter supports Prisma Client, and Prisma migration and introspection are partially supported. You can check which commands are supported in the documentation.
 
 ## Define Prisma schema
 
@@ -43,7 +43,8 @@ generator client {
 
 datasource db {
     provider     = "postgres"
-    url          = env("DATABASE_URL")
+    // We need to provide a stub value for the db url because prisma will throw a valid postgres url is not provided
+    url          = "postgresql://localhost:5432/mydb"
 }
 
 // define model according to your database table
@@ -67,7 +68,7 @@ import dotenv from 'dotenv';
 
 // setup
 dotenv.config();
-const connectionString = `${process.env.DATABASE_URL}`;
+const connectionString = `${process.env.DATABASE_DIR}`;
 
 // init prisma client
 const client = new PGlite(connectionString);
@@ -100,7 +101,7 @@ import dotenv from 'dotenv';
 
 // setup
 dotenv.config();
-const connectionString = `${process.env.DATABASE_URL}`;
+const connectionString = `${process.env.DATABASE_DIR}`;
 
 // init prisma client
 const client = new PGlite(connectionString);
@@ -134,6 +135,80 @@ try {
   await prisma.$transaction([createUser1, createUser3]) // Operations succeed together
 }
 ```
+
+## Early Access Migration Commands
+
+PGlite adapter now supports Prisma Early Access migration commands, similar to Cloudflare D1 and Turso/LibSQL. This allows you to run schema management commands against your PGlite database.
+
+### Setup for Migration Commands
+
+Create a `prisma.config.ts` file in your project root:
+
+```typescript
+// prisma.config.ts
+import path from "node:path";
+import type { PrismaConfig } from "prisma";
+import { PGlite } from "@electric-sql/pglite";
+import { PrismaPGlite } from "pglite-prisma-adapter";
+
+// import your .env file
+import "dotenv/config";
+
+type Env = {
+  DATABASE_DIR: string;
+};
+
+export default {
+  earlyAccess: true,
+  schema: path.join("prisma", "schema.prisma"),
+  migrate: {
+    async adapter(env) {
+      const client = new PGlite({ dataDir: env.DATABASE_DIR });
+      return new PrismaPGlite(client);
+    },
+  },
+  studio: {
+    async adapter(env) {
+      const client = new PGlite({ dataDir: env.DATABASE_DIR });
+      return new PrismaPGlite(client);
+    },
+  },
+} satisfies PrismaConfig<Env>;
+```
+
+### Environment Variables
+
+Make sure your `.env` file contains the required variables:
+
+```env
+# Path to the database directory
+DATABASE_DIR="./some/path"
+```
+
+### Supported Commands
+
+With this setup, you can now use these Prisma commands:
+
+- `prisma db push`: Updates the schema of your PGlite database based on your Prisma schema
+- `prisma db pull`: Introspects the schema of your PGlite database and updates your local Prisma schema
+- `prisma migrate diff`: Outputs the difference between the schema of your PGlite database and your local Prisma schema
+- `prisma studio`: Open Prisma Studio to interact with your database (using the studio adapter)
+
+### Example Usage
+
+To update your database schema based on your Prisma schema:
+
+```bash
+npx prisma db push
+```
+
+To introspect your database and update your Prisma schema:
+
+```bash
+npx prisma db pull
+```
+
+> **Note:** Support for `prisma migrate dev` and `prisma migrate deploy` will be added in future updates.
 
 ## Credits
 Based on other projects:
