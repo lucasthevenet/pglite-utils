@@ -164,6 +164,7 @@ class PrismaPGliteAdapter
 	getConnectionInfo(): ConnectionInfo {
 		return {
 			schemaName: this.options?.schema,
+			supportsRelationJoins: true,
 		};
 	}
 
