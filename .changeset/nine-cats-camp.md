@@ -2,4 +2,4 @@
 "pglite-prisma-adapter": minor
 ---
 
-add supportsRelationJoins to getConnectionInfo #28
+add supportsRelationJoins to getConnectionInfo #28 #29
