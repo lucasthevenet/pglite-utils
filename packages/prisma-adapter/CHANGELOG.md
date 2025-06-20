@@ -1,5 +1,12 @@
 # pglite-prisma-adapter
 
+## 0.6.0
+
+### Minor Changes
+
+- 404da78: - add `supportsRelationJoins` to `getConnectionInfo` #28 #29
+  - `@prisma/client` >= 6.10.0 is now required to use this new version
+
 ## 0.5.0
 
 ### Minor Changes
