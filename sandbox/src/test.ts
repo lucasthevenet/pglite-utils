@@ -1,9 +1,9 @@
 import { setImmediate, setTimeout } from "node:timers/promises";
-import type { SqlDriverAdapterFactory } from "@prisma/driver-adapter-utils";
+import type { PrismaPGlite } from "pglite-prisma-adapter";
 import superjson from "superjson";
 import { PrismaClient } from ".prisma/client";
 
-export async function smokeTest(adapter: SqlDriverAdapterFactory) {
+export async function smokeTest(adapter: PrismaPGlite) {
 	// wait for the database pool to be initialized
 	await setImmediate(0);
 
@@ -44,7 +44,7 @@ export async function smokeTest(adapter: SqlDriverAdapterFactory) {
 class SmokeTest {
 	constructor(
 		private readonly prisma: PrismaClient,
-		readonly provider: SqlDriverAdapterFactory["provider"],
+		readonly provider: PrismaPGlite["provider"],
 	) {}
 
 	async testJSON() {

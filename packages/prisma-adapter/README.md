@@ -1,146 +1,171 @@
-# pglite-adapter-prisma
+# pglite-prisma-adapter
 
-Prisma driver adapter for [Pglite Driver](https://github.com/electric-sql/pglite).
+A Prisma driver adapter for [PGlite](https://github.com/electric-sql/pglite) - the embedded PostgreSQL database for JavaScript.
 
-## Before you start
+## Overview
 
-Before you start, make sure you have:
+This adapter enables you to use Prisma ORM with PGlite, a serverless PostgreSQL database that runs in-process in Node.js applications. PGlite provides a fully SQL-compatible database without the need to run a database server.
 
-- Node >= 18
+## Prerequisites
+
+- Node.js ≥ 18
 - [Prisma CLI](https://www.prisma.io/docs/concepts/components/prisma-cli) installed
 
-## Install
+## Installation
 
-You will need to install the `pglite-prisma-adapter` driver adapter and the `@electric-sql/pglite` serverless driver.
+Install the adapter and the PGlite driver:
 
-```
+```bash
 npm install pglite-prisma-adapter @electric-sql/pglite
 ```
 
-## DATABASE URL
+Or using yarn:
 
-Set the environment to your .env file in the local environment.
+```bash
+yarn add pglite-prisma-adapter @electric-sql/pglite
+```
+
+## Configuration
+
+### Environment Setup
+
+Create a `.env` file in your project root:
 
 ```env
-// .env
+# Path to the database directory (where PGlite will store its files)
 DATABASE_DIR="./some/path"
 ```
 
-> NOTE
->
-> The adapter supports Prisma Client, and Prisma migration and introspection are partially supported. You can check which commands are supported in the documentation.
+### Prisma Schema Configuration
 
-## Define Prisma schema
-
-First, you need to create a Prisma schema file called schema.prisma and define the model. Here we use the user as an example.
+Create a `schema.prisma` file with the required configuration:
 
 ```prisma
 // schema.prisma
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["driverAdapters"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-    provider     = "postgres"
-    // We need to provide a stub value for the db url because prisma will throw a valid postgres url is not provided
-    url          = "postgresql://localhost:5432/mydb"
+  provider = "postgres"
+  // Note: This URL is required by Prisma but will be ignored when using the adapter
+  url      = "postgresql://localhost:5432/mydb"
 }
 
-// define model according to your database table
-model user {
-    id    Int     @id @default(autoincrement())
-    email String? @unique(map: "uniq_email") @db.VarChar(255)
-    name  String? @db.VarChar(255)
+// Define your models
+model User {
+  id    Int     @id @default(autoincrement())
+  email String? @unique(map: "uniq_email") @db.VarChar(255)
+  name  String? @db.VarChar(255)
 }
 ```
 
-## Query
+## Usage
 
-Here is an example of query:
+### Basic Queries
+
+Here's how to set up the adapter and run basic queries:
 
 ```js
-// query.js
 import { PGlite } from '@electric-sql/pglite';
 import { PrismaPGlite } from 'pglite-prisma-adapter';
 import { PrismaClient } from '@prisma/client';
-import dotenv from 'dotenv';
+import 'dotenv/config';
 
-// setup
-dotenv.config();
-const connectionString = `${process.env.DATABASE_DIR}`;
+// Initialize PGlite client with the database directory
+const client = new PGlite(process.env.DATABASE_DIR);
 
-// init prisma client
-const client = new PGlite(connectionString);
+// Initialize the PGlite adapter for Prisma
 const adapter = new PrismaPGlite(client);
+
+// Create Prisma client with the adapter
 const prisma = new PrismaClient({ adapter });
 
-// insert
-const user = await prisma.user.create({
+async function main() {
+  // Create a new user
+  const user = await prisma.user.create({
     data: {
-        email: 'test@prisma.io',
-        name: 'test',
+      email: 'user@example.com',
+      name: 'Example User',
     },
-})
-console.log(user)
+  });
+  console.log('Created user:', user);
+  
+  // Query all users
+  const users = await prisma.user.findMany();
+  console.log('All users:', users);
+}
 
-// query after insert
-console.log(await prisma.user.findMany())
+main()
+  .catch(console.error)
+  .finally(() => prisma.$disconnect());
 ```
 
-## Transaction
+### Transactions
 
-Here is an example of transaction:
+PGlite adapter supports Prisma transactions:
 
 ```js
-// query.js
 import { PGlite } from '@electric-sql/pglite';
 import { PrismaPGlite } from 'pglite-prisma-adapter';
 import { PrismaClient } from '@prisma/client';
-import dotenv from 'dotenv';
+import 'dotenv/config';
 
-// setup
-dotenv.config();
-const connectionString = `${process.env.DATABASE_DIR}`;
-
-// init prisma client
-const client = new PGlite(connectionString);
+const client = new PGlite(process.env.DATABASE_DIR);
 const adapter = new PrismaPGlite(client);
 const prisma = new PrismaClient({ adapter });
 
-const createUser1 = prisma.user.create({
-  data: {
-    email: 'yuhang.shi@pingcap.com',
-    name: 'Shi Yuhang',
-  },
-})
-
-const createUser2 = prisma.user.create({
-  data: {
-    email: 'yuhang.shi@pingcap.com',
-    name: 'Shi Yuhang2',
-  },
-})
-
-const createUser3 = prisma.user.create({
-  data: {
-    email: 'yuhang2.shi@pingcap.com',
-    name: 'Shi Yuhang2',
-  },
-})
-try {
-  await prisma.$transaction([createUser1, createUser2]) // Operations fail together
-} catch (e) {
-  console.log(e)
-  await prisma.$transaction([createUser1, createUser3]) // Operations succeed together
+async function main() {
+  try {
+    // This transaction will fail because both operations create users with the same email
+    await prisma.$transaction([
+      prisma.user.create({
+        data: {
+          email: 'duplicate@example.com',
+          name: 'User 1',
+        },
+      }),
+      prisma.user.create({
+        data: {
+          email: 'duplicate@example.com', // Same email, will cause a unique constraint violation
+          name: 'User 2',
+        },
+      })
+    ]);
+  } catch (error) {
+    console.log('Transaction failed as expected:', error.message);
+    
+    // This transaction will succeed
+    const result = await prisma.$transaction([
+      prisma.user.create({
+        data: {
+          email: 'user1@example.com',
+          name: 'User 1',
+        },
+      }),
+      prisma.user.create({
+        data: {
+          email: 'user2@example.com',
+          name: 'User 2',
+        },
+      })
+    ]);
+    
+    console.log('Successful transaction:', result);
+  }
 }
+
+main()
+  .catch(console.error)
+  .finally(() => prisma.$disconnect());
 ```
 
-## Early Access Migration Commands
+## Schema Management
 
-PGlite adapter now supports Prisma Early Access migration commands, similar to Cloudflare D1 and Turso/LibSQL. This allows you to run schema management commands against your PGlite database.
+PGlite adapter supports Prisma Early Access migration commands, similar to Cloudflare D1 and Turso/LibSQL adapters.
 
-### Setup for Migration Commands
+### Migration Setup
 
 Create a `prisma.config.ts` file in your project root:
 
@@ -150,8 +175,6 @@ import path from "node:path";
 import type { PrismaConfig } from "prisma";
 import { PGlite } from "@electric-sql/pglite";
 import { PrismaPGlite } from "pglite-prisma-adapter";
-
-// import your .env file
 import "dotenv/config";
 
 type Env = {
@@ -176,41 +199,35 @@ export default {
 } satisfies PrismaConfig<Env>;
 ```
 
-### Environment Variables
+### Supported Migration Commands
 
-Make sure your `.env` file contains the required variables:
+With the configuration above, you can use these Prisma commands:
 
-```env
-# Path to the database directory
-DATABASE_DIR="./some/path"
-```
+| Command | Description |
+|---------|-------------|
+| `npx prisma db push` | Updates your database schema based on your Prisma schema |
+| `npx prisma db pull` | Introspects your database and updates your Prisma schema |
+| `npx prisma migrate diff` | Shows the difference between your database and Prisma schema |
+| `npx prisma studio` | Opens Prisma Studio to interact with your database |
 
-### Supported Commands
+> **Note:** Support for `prisma migrate dev` and `prisma migrate deploy` is planned for future updates.
 
-With this setup, you can now use these Prisma commands:
+## Limitations
 
-- `prisma db push`: Updates the schema of your PGlite database based on your Prisma schema
-- `prisma db pull`: Introspects the schema of your PGlite database and updates your local Prisma schema
-- `prisma migrate diff`: Outputs the difference between the schema of your PGlite database and your local Prisma schema
-- `prisma studio`: Open Prisma Studio to interact with your database (using the studio adapter)
+- This adapter supports Prisma Client for all CRUD operations
+- Prisma migrations are supported via Early Access commands
+- Some advanced Prisma features may not be fully supported yet
 
-### Example Usage
+## Examples
 
-To update your database schema based on your Prisma schema:
-
-```bash
-npx prisma db push
-```
-
-To introspect your database and update your Prisma schema:
-
-```bash
-npx prisma db pull
-```
-
-> **Note:** Support for `prisma migrate dev` and `prisma migrate deploy` will be added in future updates.
+For more detailed examples, check the [examples directory](https://github.com/electric-sql/pglite) in the PGlite repository.
 
 ## Credits
-Based on other projects:
+
+This adapter is based on:
 - [@tidbcloud/prisma-adapter](https://github.com/tidbcloud/prisma-adapter)
 - [@prisma/adapter-pg](https://github.com/prisma/prisma/tree/main/packages/adapter-pg)
+
+## License
+
+MIT
