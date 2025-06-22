@@ -1,5 +1,11 @@
 # pglite-prisma-adapter
 
+## 0.6.1
+
+### Patch Changes
+
+- 4c9ecbd: Added github links to package.json and fixed incorrectly referenced license #31
+
 ## 0.6.0
 
 ### Minor Changes
