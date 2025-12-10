@@ -1,28 +1,12 @@
 import path from "node:path";
-import type { PrismaConfig } from "prisma";
-import { PGlite } from "@electric-sql/pglite";
-import { PrismaPGlite } from "pglite-prisma-adapter";
+import { defineConfig } from "prisma/config"
 
 // import your .env file
 import "dotenv/config";
 
-type Env = {
-  DATABASE_DIR: string;
-};
-
-export default {
-  earlyAccess: true,
+export default defineConfig({
   schema: path.join("prisma", "schema.prisma"),
-  migrate: {
-    async adapter(env) {
-      const client = new PGlite({ dataDir: env.DATABASE_DIR });
-      return new PrismaPGlite(client);
-    },
+  datasource: {
+    url: process.env.DATABASE_URL ?? "postgresql://localhost:5433/mydb",
   },
-  studio: {
-    async adapter(env) {
-      const client = new PGlite({ dataDir: env.DATABASE_DIR });
-      return new PrismaPGlite(client);
-    },
-  },
-} satisfies PrismaConfig<Env>;
+})
