@@ -23,7 +23,7 @@ declaration/
 .prisma
 .pnpm-store
 
-prisma/generated
+sandbox/prisma/generated
 
 .vscode
 !.vscode/launch.json.default
