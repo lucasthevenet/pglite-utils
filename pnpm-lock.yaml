@@ -86,7 +86,7 @@ importers:
         specifier: ^0.2.17
         version: 0.2.17
       '@prisma/client':
-        specifier: '>= 6.10.0'
+        specifier: 7.1.0
         version: 7.1.0(prisma@7.1.0(@types/react@19.2.7)(magicast@0.3.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(typescript@5.8.2))(typescript@5.8.2)
       pglite-prisma-adapter:
         specifier: workspace:*
@@ -99,7 +99,7 @@ importers:
         specifier: ^22.13.14
         version: 22.13.14
       prisma:
-        specifier: '>= 6.10.0'
+        specifier: 7.1.0
         version: 7.1.0(@types/react@19.2.7)(magicast@0.3.5)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(typescript@5.8.2)
       tsx:
         specifier: ^4.19.3
