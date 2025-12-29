@@ -57,8 +57,7 @@
     "typescript": "^5.8.2"
   },
   "peerDependencies": {
-    "@electric-sql/pglite": ">=0.2.0",
-    "@prisma/client": ">= 7.1.0"
+    "@electric-sql/pglite": ">=0.2.0"
   },
   "repository": {
     "type": "git",
