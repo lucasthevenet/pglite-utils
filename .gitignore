@@ -23,6 +23,8 @@ declaration/
 .prisma
 .pnpm-store
 
+sandbox/prisma/generated
+
 .vscode
 !.vscode/launch.json.default
 coverage

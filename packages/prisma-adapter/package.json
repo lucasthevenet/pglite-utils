@@ -47,7 +47,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@prisma/driver-adapter-utils": "6.10.1",
+    "@prisma/driver-adapter-utils": "7.1.0",
     "postgres-array": "^3.0.4"
   },
   "devDependencies": {
@@ -58,7 +58,7 @@
   },
   "peerDependencies": {
     "@electric-sql/pglite": ">=0.2.0",
-    "@prisma/client": ">= 6.10.0"
+    "@prisma/client": ">= 7.1.0"
   },
   "repository": {
     "type": "git",
