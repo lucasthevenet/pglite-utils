@@ -1,5 +1,11 @@
 # pglite-prisma-adapter
 
+## 0.7.0
+
+### Minor Changes
+
+- 6e915ab: Make adapter compatible with Prisma v7. Thanks to @JQuezada0 for the help!
+
 ## 0.6.1
 
 ### Patch Changes
