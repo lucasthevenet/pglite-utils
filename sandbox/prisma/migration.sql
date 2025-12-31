@@ -99,6 +99,55 @@ CREATE TABLE "Product" (
 );
 
 -- CreateTable
+CREATE TABLE "ProductWithJsonArray" (
+    "id" TEXT NOT NULL,
+    "properties_arr" JSONB[] NOT NULL,
+    CONSTRAINT "ProductWithJsonArray_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "array_type_test" (
+    "id" TEXT NOT NULL,
+    -- Int32Array types (INT2, INT4)
+    "int2_arr" SMALLINT[] NOT NULL,
+    "int4_arr" INTEGER[] NOT NULL,
+    -- Int64Array types (INT8)
+    "int8_arr" BIGINT[] NOT NULL,
+    -- FloatArray (FLOAT4)
+    "float4_arr" REAL[] NOT NULL,
+    -- DoubleArray (FLOAT8)
+    "float8_arr" DOUBLE PRECISION[] NOT NULL,
+    -- NumericArray (NUMERIC, MONEY)
+    "numeric_arr" DECIMAL[] NOT NULL,
+    "money_arr" MONEY[] NOT NULL,
+    -- BooleanArray (BOOL)
+    "bool_arr" BOOLEAN[] NOT NULL,
+    -- CharacterArray (CHAR)
+    "char_arr" CHAR(1)[] NOT NULL,
+    -- TextArray (BPCHAR, TEXT, VARCHAR, BIT, VARBIT, INET, CIDR, XML)
+    "bpchar_arr" CHAR(10)[] NOT NULL,
+    "text_arr" TEXT[] NOT NULL,
+    "varchar_arr" VARCHAR(255)[] NOT NULL,
+    "bit_arr" BIT(8)[] NOT NULL,
+    "varbit_arr" VARBIT(16)[] NOT NULL,
+    "inet_arr" INET[] NOT NULL,
+    "xml_arr" XML[] NOT NULL,
+    -- DateArray (DATE)
+    "date_arr" DATE[] NOT NULL,
+    -- DateTimeArray (TIMESTAMP, TIMESTAMPTZ)
+    "timestamp_arr" TIMESTAMP(3)[] NOT NULL,
+    "timestamptz_arr" TIMESTAMPTZ(3)[] NOT NULL,
+    -- JsonArray (JSON, JSONB)
+    "json_arr" JSON[] NOT NULL,
+    "jsonb_arr" JSONB[] NOT NULL,
+    -- BytesArray (BYTEA)
+    "bytea_arr" BYTEA[] NOT NULL,
+    -- UuidArray (UUID)
+    "uuid_arr" UUID[] NOT NULL,
+    CONSTRAINT "array_type_test_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "leak_test" (
     "id" TEXT NOT NULL,
     CONSTRAINT "leak_test_pkey" PRIMARY KEY ("id")
