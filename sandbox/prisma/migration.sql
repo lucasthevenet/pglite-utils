@@ -99,6 +99,13 @@ CREATE TABLE "Product" (
 );
 
 -- CreateTable
+CREATE TABLE "Person" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "pets" JSONB[],
+    CONSTRAINT "Person_pkey" PRIMARY KEY ("id")
+);
+-- CreateTable
 CREATE TABLE "leak_test" (
     "id" TEXT NOT NULL,
     CONSTRAINT "leak_test_pkey" PRIMARY KEY ("id")

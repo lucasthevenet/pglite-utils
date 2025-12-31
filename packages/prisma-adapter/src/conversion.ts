@@ -352,7 +352,9 @@ export const customParsers: ParserOptions = {
 	[ArrayColumnType.TIMESTAMPTZ]: normalize_array(normalize_timestampz),
 	[ScalarColumnType.MONEY]: normalize_money,
 	[ScalarColumnType.JSON]: toJson,
+	[ArrayColumnType.JSON]: normalize_array(toJson),
 	[ScalarColumnType.JSONB]: toJson,
+	[ArrayColumnType.JSONB]: normalize_array(toJson),
 	[ScalarColumnType.BYTEA]: convertBytes,
 	[ArrayColumnType.BYTEA]: normalize_array(convertBytes),
 };

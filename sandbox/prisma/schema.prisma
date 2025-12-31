@@ -110,6 +110,12 @@ model Product {
   properties_null Json?
 }
 
+model Person {
+  id       String @id @default(cuid())
+  name     String
+  pets     Json[]
+}
+
 model leak_test {
   id String @id @default(cuid())
 }
