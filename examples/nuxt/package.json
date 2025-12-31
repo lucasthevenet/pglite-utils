@@ -7,7 +7,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "db:init": "pnpm dlx tsx prisma/initialize.ts"
+    "db:init": "bunx tsx prisma/initialize.ts"
   },
   "dependencies": {
     "@auth/core": "^0.38.0",

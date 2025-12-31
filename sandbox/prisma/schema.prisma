@@ -1,6 +1,6 @@
 generator client {
-  provider        = "prisma-client"
-  output          = "./generated/client"
+  provider = "prisma-client"
+  output   = "./generated/client"
 }
 
 datasource db {
@@ -110,10 +110,49 @@ model Product {
   properties_null Json?
 }
 
-model Person {
-  id       String @id @default(cuid())
-  name     String
-  pets     Json[]
+model ProductWithJsonArray {
+  id             String @id @default(cuid())
+  properties_arr Json[]
+}
+
+model array_type_test {
+  id              String     @id @default(cuid())
+  // Int32Array types (INT2, INT4)
+  int2_arr        Int[]      @db.SmallInt
+  int4_arr        Int[]
+  // Int64Array types (INT8)
+  int8_arr        BigInt[]
+  // FloatArray (FLOAT4)
+  float4_arr      Float[]    @db.Real
+  // DoubleArray (FLOAT8)
+  float8_arr      Float[]
+  // NumericArray (NUMERIC, MONEY)
+  numeric_arr     Decimal[]
+  money_arr       Decimal[]  @db.Money
+  // BooleanArray (BOOL)
+  bool_arr        Boolean[]
+  // CharacterArray (CHAR)
+  char_arr        String[]   @db.Char(1)
+  // TextArray (BPCHAR, TEXT, VARCHAR, BIT, VARBIT, INET, CIDR, XML)
+  bpchar_arr      String[]   @db.Char(10)
+  text_arr        String[]
+  varchar_arr     String[]   @db.VarChar(255)
+  bit_arr         String[]   @db.Bit(8)
+  varbit_arr      String[]   @db.VarBit(16)
+  inet_arr        String[]   @db.Inet
+  xml_arr         String[]   @db.Xml
+  // DateArray (DATE)
+  date_arr        DateTime[] @db.Date
+  // DateTimeArray (TIMESTAMP, TIMESTAMPTZ)
+  timestamp_arr   DateTime[] @db.Timestamp(3)
+  timestamptz_arr DateTime[] @db.Timestamptz(3)
+  // JsonArray (JSON, JSONB)
+  json_arr        Json[]     @db.Json
+  jsonb_arr       Json[]
+  // BytesArray (BYTEA)
+  bytea_arr       Bytes[]
+  // UuidArray (UUID)
+  uuid_arr        String[]   @db.Uuid
 }
 
 model leak_test {

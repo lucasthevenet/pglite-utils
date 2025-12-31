@@ -2,6 +2,33 @@
   "name": "pglite-prisma-adapter",
   "version": "0.7.0",
   "description": "Prisma's driver adapter for \"@electric-sql/pglite\"",
+  "keywords": [
+    "Bun",
+    "Cloudflare",
+    "Deno",
+    "Netlify",
+    "PostgreSQL",
+    "Prisma",
+    "SQL",
+    "Vercel",
+    "database",
+    "edge",
+    "electric-sql",
+    "pglite",
+    "serverless"
+  ],
+  "license": "MIT",
+  "author": "Lucas Thevenet <lcervantes@dc.uba.ar>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucasthevenet/pglite-utils.git",
+    "directory": "packages/prisma-adapter"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": false,
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.cts",
@@ -15,36 +42,14 @@
       "default": "./dist/index.mjs"
     }
   },
-  "scripts": {
-    "build": "pkgroll",
-    "clean": "rm -rf .turbo node_modules dist",
-    "lint": "biome check ./src",
-    "typecheck": "tsc --noEmit"
-  },
-  "files": [
-    "dist",
-    "README.md"
-  ],
-  "keywords": [
-    "pglite",
-    "electric-sql",
-    "serverless",
-    "PostgreSQL",
-    "edge",
-    "Vercel",
-    "Cloudflare",
-    "Netlify",
-    "Bun",
-    "Deno",
-    "database",
-    "SQL",
-    "Prisma"
-  ],
-  "author": "Lucas Thevenet <lcervantes@dc.uba.ar>",
-  "license": "MIT",
-  "sideEffects": false,
   "publishConfig": {
     "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown --format esm --format cjs",
+    "clean": "rm -rf .turbo node_modules dist",
+    "lint": "oxlint",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@prisma/driver-adapter-utils": "7.1.0",
@@ -53,15 +58,11 @@
   "devDependencies": {
     "@electric-sql/pglite": "^0.2.17",
     "@types/node": "^22.13.14",
-    "pkgroll": "2.1.1",
+    "tsdown": "^0.18.4",
     "typescript": "^5.8.2"
   },
   "peerDependencies": {
-    "@electric-sql/pglite": ">=0.2.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/lucasthevenet/pglite-utils.git",
-    "directory": "packages/prisma-adapter"
+    "@electric-sql/pglite": ">=0.2.0",
+    "@prisma/client": ">= 7.1.0"
   }
 }

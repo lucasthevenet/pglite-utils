@@ -91,7 +91,7 @@ async function main() {
     },
   });
   console.log('Created user:', user);
-  
+
   // Query all users
   const users = await prisma.user.findMany();
   console.log('All users:', users);
@@ -135,7 +135,7 @@ async function main() {
     ]);
   } catch (error) {
     console.log('Transaction failed as expected:', error.message);
-    
+
     // This transaction will succeed
     const result = await prisma.$transaction([
       prisma.user.create({
@@ -151,7 +151,7 @@ async function main() {
         },
       })
     ]);
-    
+
     console.log('Successful transaction:', result);
   }
 }
@@ -203,12 +203,12 @@ export default {
 
 With the configuration above, you can use these Prisma commands:
 
-| Command | Description |
-|---------|-------------|
-| `npx prisma db push` | Updates your database schema based on your Prisma schema |
-| `npx prisma db pull` | Introspects your database and updates your Prisma schema |
+| Command                   | Description                                                  |
+| ------------------------- | ------------------------------------------------------------ |
+| `npx prisma db push`      | Updates your database schema based on your Prisma schema     |
+| `npx prisma db pull`      | Introspects your database and updates your Prisma schema     |
 | `npx prisma migrate diff` | Shows the difference between your database and Prisma schema |
-| `npx prisma studio` | Opens Prisma Studio to interact with your database |
+| `npx prisma studio`       | Opens Prisma Studio to interact with your database           |
 
 > **Note:** Support for `prisma migrate dev` and `prisma migrate deploy` is planned for future updates.
 
@@ -225,6 +225,7 @@ For more detailed examples, check the [examples directory](https://github.com/el
 ## Credits
 
 This adapter is based on:
+
 - [@tidbcloud/prisma-adapter](https://github.com/tidbcloud/prisma-adapter)
 - [@prisma/adapter-pg](https://github.com/prisma/prisma/tree/main/packages/adapter-pg)
 

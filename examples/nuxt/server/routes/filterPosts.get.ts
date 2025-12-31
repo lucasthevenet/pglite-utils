@@ -1,30 +1,31 @@
-import { prisma } from '../db'
+import { prisma } from "../db";
 
 // https://nuxt.com/docs/guide/directory-structure/server
 export default defineEventHandler(async (event) => {
-    const { searchString } = getQuery(event);
+  const { searchString } = getQuery(event);
 
-    const draftPosts = await prisma.post.findMany({
-        where: {
-            OR: [
-              {
-                title: {
-                    //@ts-ignore
-                    contains: searchString,
-                },
-              },
-              {
-                content: {
-                    //@ts-ignore
-                    contains: searchString,
-                },
-              },
-            ],
-        },
+  const draftPosts = await prisma.post
+    .findMany({
+      where: {
+        OR: [
+          {
+            title: {
+              //@ts-ignore
+              contains: searchString,
+            },
+          },
+          {
+            content: {
+              //@ts-ignore
+              contains: searchString,
+            },
+          },
+        ],
+      },
     })
     .catch((error) => {
-        console.error(error);
+      console.error(error);
     });
 
-    return draftPosts;
+  return draftPosts;
 });
