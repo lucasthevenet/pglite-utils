@@ -17,6 +17,7 @@ export async function smokeTest(adapter: PrismaPGlite) {
 	const test = new SmokeTest(prisma, adapter.provider);
 
 	await test.testJSON();
+	await test.testJSONArray();
 	await test.testTypeTest2();
 	await test.$raw();
 	await test.testFindManyTypeTest();
@@ -48,10 +49,10 @@ class SmokeTest {
 	) {}
 
 	async testJSON() {
-		const json = JSON.stringify({
+		const json = {
 			foo: "bar",
 			baz: 1,
-		});
+		};
 
 		const created = await this.prisma.product.create({
 			data: {
@@ -68,6 +69,31 @@ class SmokeTest {
 		console.log("[nodejs] resultSet", superjson.serialize(resultSet).json);
 
 		await this.prisma.product.deleteMany({});
+	}
+
+	async testJSONArray() {
+		const jsonArray = [
+			{ name: "dog", age: 10 },
+			{ name: "cat", age: 5 },
+		];
+
+		const created = await this.prisma.person.create({
+			data: {
+				name: 'human',
+				pets: jsonArray,
+			},
+			select: {
+				pets: true,
+			},
+		});
+
+		console.log("[nodejs] created", superjson.serialize(created).json);
+
+		const resultSet = await this.prisma.person.findMany({});
+
+		console.log("[nodejs] resultSet");
+		console.dir(superjson.serialize(resultSet).json, {depth: null});
+		await this.prisma.person.deleteMany({});
 	}
 
 	async transactionsWithConflicts() {
