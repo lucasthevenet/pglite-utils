@@ -1,9 +1,9 @@
 import { setImmediate, setTimeout } from "node:timers/promises";
-import type { PrismaPGlite } from "pglite-prisma-adapter";
 import superjson from "superjson";
 import { PrismaClient } from "../prisma/generated/client/client";
+import type { SqlDriverAdapterFactory } from "@prisma/driver-adapter-utils";
 
-export async function smokeTest(adapter: PrismaPGlite) {
+export async function smokeTest(adapter: SqlDriverAdapterFactory) {
   // wait for the database pool to be initialized
   await setImmediate(0);
 
@@ -45,14 +45,14 @@ export async function smokeTest(adapter: PrismaPGlite) {
 class SmokeTest {
   constructor(
     private readonly prisma: PrismaClient,
-    readonly provider: PrismaPGlite["provider"],
+    readonly provider: SqlDriverAdapterFactory["provider"]
   ) {}
 
   async testJSON() {
-    const json = {
+    const json = JSON.stringify({
       foo: "bar",
       baz: 1,
-    };
+    });
 
     const created = await this.prisma.product.create({
       data: {
@@ -121,7 +121,7 @@ class SmokeTest {
       [this.prisma.child.findMany(), this.prisma.child.count()],
       {
         isolationLevel: "Serializable",
-      },
+      }
     );
 
     console.log("[nodejs] children", superjson.serialize(children).json);
@@ -221,7 +221,10 @@ class SmokeTest {
         enum_column: true,
       },
     });
-    console.log("[nodejs] findMany resultSet", superjson.serialize(resultSet).json);
+    console.log(
+      "[nodejs] findMany resultSet",
+      superjson.serialize(resultSet).json
+    );
 
     return resultSet;
   }
@@ -259,7 +262,10 @@ class SmokeTest {
         p: "p1",
       },
     });
-    console.log("[nodejs] resultDeleteMany", superjson.serialize(resultDeleteMany).json);
+    console.log(
+      "[nodejs] resultDeleteMany",
+      superjson.serialize(resultDeleteMany).json
+    );
   }
 
   async testBigInt() {
@@ -306,15 +312,24 @@ class SmokeTest {
       // DateArray (DATE)
       date_arr: [new Date("2024-01-01"), new Date("2024-12-31")],
       // DateTimeArray (TIMESTAMP, TIMESTAMPTZ)
-      timestamp_arr: [new Date("2024-01-01T12:00:00.000Z"), new Date("2024-12-31T23:59:59.999Z")],
-      timestamptz_arr: [new Date("2024-01-01T12:00:00.000Z"), new Date("2024-12-31T23:59:59.999Z")],
+      timestamp_arr: [
+        new Date("2024-01-01T12:00:00.000Z"),
+        new Date("2024-12-31T23:59:59.999Z"),
+      ],
+      timestamptz_arr: [
+        new Date("2024-01-01T12:00:00.000Z"),
+        new Date("2024-12-31T23:59:59.999Z"),
+      ],
       // JsonArray (JSON, JSONB)
       json_arr: [{ foo: "bar" }, { baz: 123 }],
       jsonb_arr: [{ key: "value" }, { nested: { data: true } }],
       // BytesArray (BYTEA)
       bytea_arr: [Buffer.from("hello"), Buffer.from("world")],
       // UuidArray (UUID)
-      uuid_arr: ["550e8400-e29b-41d4-a716-446655440000", "6ba7b810-9dad-11d1-80b4-00c04fd430c8"],
+      uuid_arr: [
+        "550e8400-e29b-41d4-a716-446655440000",
+        "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+      ],
     };
 
     const created = await this.prisma.array_type_test.create({
