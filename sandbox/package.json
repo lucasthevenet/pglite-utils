@@ -2,12 +2,11 @@
   "name": "sandbox",
   "version": "0.0.7",
   "private": true,
-  "descriptions": "Smoke tests for the Prisma adapter",
   "main": "index.js",
   "scripts": {
     "test": "tsx src/pglite.ts",
     "clean": "rm -rf .turbo node_modules .pglite",
-    "lint": "biome check ./src",
+    "lint": "oxlint",
     "pretest": "prisma generate"
   },
   "dependencies": {
@@ -22,5 +21,6 @@
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
     "vitest": "^3.0.9"
-  }
+  },
+  "descriptions": "Smoke tests for the Prisma adapter"
 }

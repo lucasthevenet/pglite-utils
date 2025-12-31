@@ -1,18 +1,19 @@
-import { prisma } from '../db'
+import { prisma } from "../db";
 
 // https://nuxt.com/docs/guide/directory-structure/server
-export default defineEventHandler(async (event) => {
-    const feed = await prisma.post.findMany({
-        where: { 
-            published: true
-        },
-        include: {
-            author: true
-        }
+export default defineEventHandler(async () => {
+  const feed = await prisma.post
+    .findMany({
+      where: {
+        published: true,
+      },
+      include: {
+        author: true,
+      },
     })
-    .catch((error) => {
-        console.error(error);
+    .catch((error: unknown) => {
+      console.error(error);
     });
 
-    return feed;
+  return feed;
 });
