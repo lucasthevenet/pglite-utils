@@ -1,5 +1,11 @@
 # pglite-prisma-adapter
 
+## 0.7.1
+
+### Patch Changes
+
+- 3e74754: Fix incorrect parsing on arrays of json, bigint, and others. Thanks to @alexmalev for reporting and helping with the fix! #40 #41
+
 ## 0.7.0
 
 ### Minor Changes
