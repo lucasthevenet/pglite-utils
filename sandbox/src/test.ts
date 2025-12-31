@@ -47,7 +47,7 @@ class SmokeTest {
 	constructor(
 		private readonly prisma: PrismaClient,
 		readonly provider: PrismaPGlite["provider"],
-	) { }
+	) {}
 
 	async testJSON() {
 		const json = {
@@ -93,7 +93,7 @@ class SmokeTest {
 		const resultSet = await this.prisma.person.findMany({});
 
 		console.log("[nodejs] resultSet");
-		console.dir(superjson.serialize(resultSet).json, { depth: null });
+		console.dir(superjson.serialize(resultSet).json, {depth: null});
 		await this.prisma.person.deleteMany({});
 	}
 
