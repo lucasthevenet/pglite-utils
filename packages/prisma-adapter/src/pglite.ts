@@ -22,6 +22,7 @@ import {
 	fixArrayBufferValues,
 } from "./conversion";
 import { type Deferred, createDeferred } from "./deferred";
+import { convertDriverError } from "./errors";
 
 const debug = Debug("prisma:driver-adapter:pglite");
 
@@ -96,15 +97,7 @@ class PGliteQueryable<
 	protected onError(error: unknown): never {
 		debug("Error in performIO: %O", error);
 		if (error instanceof pglite.messages.DatabaseError) {
-			throw new DriverAdapterError({
-				kind: "postgres",
-				code: error.code ?? "UNKNOWN",
-				severity: error.severity ?? "UNKNOWN",
-				message: error.message,
-				detail: error.detail,
-				column: error.column,
-				hint: error.hint,
-			});
+			throw new DriverAdapterError(convertDriverError(error));
 		}
 		throw error;
 	}

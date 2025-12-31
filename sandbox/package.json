@@ -12,13 +12,13 @@
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.2.17",
-    "@prisma/client": "7.1.0",
+    "@prisma/client": "7.2.0",
     "pglite-prisma-adapter": "workspace:*",
     "superjson": "^2.2.2"
   },
   "devDependencies": {
     "@types/node": "^22.13.14",
-    "prisma": "7.1.0",
+    "prisma": "7.2.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
     "vitest": "^3.0.9"

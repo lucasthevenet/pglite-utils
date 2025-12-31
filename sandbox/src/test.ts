@@ -26,6 +26,7 @@ export async function smokeTest(adapter: PrismaPGlite) {
 	await test.interactiveTransactions();
 	await test.explicitTransaction();
 	await test.testBigInt();
+	await test.testPrismaClientKnownRequestError();
 
 	console.log("[nodejs] disconnecting...");
 	await prisma.$disconnect();
@@ -46,7 +47,7 @@ class SmokeTest {
 	constructor(
 		private readonly prisma: PrismaClient,
 		readonly provider: PrismaPGlite["provider"],
-	) {}
+	) { }
 
 	async testJSON() {
 		const json = {
@@ -92,7 +93,7 @@ class SmokeTest {
 		const resultSet = await this.prisma.person.findMany({});
 
 		console.log("[nodejs] resultSet");
-		console.dir(superjson.serialize(resultSet).json, {depth: null});
+		console.dir(superjson.serialize(resultSet).json, { depth: null });
 		await this.prisma.person.deleteMany({});
 	}
 
@@ -280,5 +281,20 @@ class SmokeTest {
 		}
 
 		console.log("[nodejs] testBigInt result", superjson.serialize(result).json);
+	}
+
+	async testPrismaClientKnownRequestError() {
+		const error = await this.prisma.product.createMany({
+			data: [
+				{ id: "1", properties: {} },
+				{ id: "1", properties: {} }
+			],
+		}).catch((error) => error);
+
+		if (!(error.code === "P2002" && error.meta.driverAdapterError.cause.kind === "UniqueConstraintViolation")) {
+			throw new Error("Expected UniqueConstraintViolation (P2002) error");
+		}
+
+		console.log("[nodejs] PrismaClientKnownRequestError", JSON.stringify(error));
 	}
 }
