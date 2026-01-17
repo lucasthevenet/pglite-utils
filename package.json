@@ -7,6 +7,7 @@
     "examples/*"
   ],
   "scripts": {
+    "prepare": "husky install",
     "build": "turbo run build",
     "test": "turbo run test",
     "clean": "git clean -xdf node_modules",
@@ -22,6 +23,7 @@
   "devDependencies": {
     "@changesets/cli": "^2.28.1",
     "@types/node": "^22.13.14",
+    "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "oxfmt": "^0.24.0",
     "oxlint": "^1.39.0",
