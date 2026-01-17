@@ -68,10 +68,10 @@ model User {
 Here's how to set up the adapter and run basic queries:
 
 ```js
-import { PGlite } from '@electric-sql/pglite';
-import { PrismaPGlite } from 'pglite-prisma-adapter';
-import { PrismaClient } from '@prisma/client';
-import 'dotenv/config';
+import { PGlite } from "@electric-sql/pglite";
+import { PrismaPGlite } from "pglite-prisma-adapter";
+import { PrismaClient } from "@prisma/client";
+import "dotenv/config";
 
 // Initialize PGlite client with the database directory
 const client = new PGlite(process.env.DATABASE_DIR);
@@ -86,15 +86,15 @@ async function main() {
   // Create a new user
   const user = await prisma.user.create({
     data: {
-      email: 'user@example.com',
-      name: 'Example User',
+      email: "user@example.com",
+      name: "Example User",
     },
   });
-  console.log('Created user:', user);
+  console.log("Created user:", user);
 
   // Query all users
   const users = await prisma.user.findMany();
-  console.log('All users:', users);
+  console.log("All users:", users);
 }
 
 main()
@@ -107,10 +107,10 @@ main()
 PGlite adapter supports Prisma transactions:
 
 ```js
-import { PGlite } from '@electric-sql/pglite';
-import { PrismaPGlite } from 'pglite-prisma-adapter';
-import { PrismaClient } from '@prisma/client';
-import 'dotenv/config';
+import { PGlite } from "@electric-sql/pglite";
+import { PrismaPGlite } from "pglite-prisma-adapter";
+import { PrismaClient } from "@prisma/client";
+import "dotenv/config";
 
 const client = new PGlite(process.env.DATABASE_DIR);
 const adapter = new PrismaPGlite(client);
@@ -122,37 +122,37 @@ async function main() {
     await prisma.$transaction([
       prisma.user.create({
         data: {
-          email: 'duplicate@example.com',
-          name: 'User 1',
+          email: "duplicate@example.com",
+          name: "User 1",
         },
       }),
       prisma.user.create({
         data: {
-          email: 'duplicate@example.com', // Same email, will cause a unique constraint violation
-          name: 'User 2',
+          email: "duplicate@example.com", // Same email, will cause a unique constraint violation
+          name: "User 2",
         },
-      })
+      }),
     ]);
   } catch (error) {
-    console.log('Transaction failed as expected:', error.message);
+    console.log("Transaction failed as expected:", error.message);
 
     // This transaction will succeed
     const result = await prisma.$transaction([
       prisma.user.create({
         data: {
-          email: 'user1@example.com',
-          name: 'User 1',
+          email: "user1@example.com",
+          name: "User 1",
         },
       }),
       prisma.user.create({
         data: {
-          email: 'user2@example.com',
-          name: 'User 2',
+          email: "user2@example.com",
+          name: "User 2",
         },
-      })
+      }),
     ]);
 
-    console.log('Successful transaction:', result);
+    console.log("Successful transaction:", result);
   }
 }
 

@@ -1,5 +1,9 @@
 import { type ParserOptions, types } from "@electric-sql/pglite";
-import { type ArgType, type ColumnType, ColumnTypeEnum } from "@prisma/driver-adapter-utils";
+import {
+  type ArgType,
+  type ColumnType,
+  ColumnTypeEnum,
+} from "@prisma/driver-adapter-utils";
 import { parse as parseArray } from "postgres-array";
 
 /**
@@ -273,7 +277,7 @@ export function fieldToColumnType(fieldTypeId: number): ColumnType {
 }
 
 function normalize_array(
-  element_normalizer: (string: string) => string,
+  element_normalizer: (string: string) => string
 ): (string: string) => string[] {
   return (str) => parseArray(str, element_normalizer);
 }
@@ -354,7 +358,7 @@ function toJson(json: string): string {
 const parsePgBytes = (x: string): Uint8Array => {
   const hexString = x.slice(2);
   return Uint8Array.from({ length: hexString.length / 2 }, (_, idx) =>
-    Number.parseInt(hexString.substring(idx * 2, (idx + 1) * 2), 16),
+    Number.parseInt(hexString.substring(idx * 2, (idx + 1) * 2), 16)
   );
 };
 
@@ -365,7 +369,7 @@ function normalizeByteaArray(x: string) {
   return parseArray(x).map((x: string): Uint8Array => {
     const hexString = x.slice(2);
     return Uint8Array.from({ length: hexString.length / 2 }, (_, idx) =>
-      Number.parseInt(hexString.substring(idx * 2, (idx + 1) * 2), 16),
+      Number.parseInt(hexString.substring(idx * 2, (idx + 1) * 2), 16)
     );
   });
 }
@@ -418,7 +422,7 @@ export const customParsers: ParserOptions = {
 
 export function mapArg<A>(
   arg: A | Date,
-  argType: ArgType,
+  argType: ArgType
 ): null | unknown[] | string | Uint8Array | A {
   if (arg === null) {
     return null;
@@ -460,16 +464,16 @@ function formatDateTime(date: Date): string {
   const pad = (n: number, z = 2) => String(n).padStart(z, "0");
   const ms = date.getUTCMilliseconds();
   return `${pad(date.getUTCFullYear(), 4)}-${pad(date.getUTCMonth() + 1)}-${pad(
-    date.getUTCDate(),
+    date.getUTCDate()
   )} ${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}:${pad(
-    date.getUTCSeconds(),
+    date.getUTCSeconds()
   )}${ms ? `.${String(ms).padStart(3, "0")}` : ""}`;
 }
 
 function formatDate(date: Date): string {
   const pad = (n: number, z = 2) => String(n).padStart(z, "0");
   return `${pad(date.getUTCFullYear(), 4)}-${pad(date.getUTCMonth() + 1)}-${pad(
-    date.getUTCDate(),
+    date.getUTCDate()
   )}`;
 }
 
@@ -477,6 +481,6 @@ function formatTime(date: Date): string {
   const pad = (n: number, z = 2) => String(n).padStart(z, "0");
   const ms = date.getUTCMilliseconds();
   return `${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}:${pad(
-    date.getUTCSeconds(),
+    date.getUTCSeconds()
   )}${ms ? `.${String(ms).padStart(3, "0")}` : ""}`;
 }

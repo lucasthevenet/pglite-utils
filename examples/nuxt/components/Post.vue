@@ -15,11 +15,11 @@ const { post } = defineProps({
     type: Object,
     default: [],
   },
-})
+});
 
 const navigate = (post) => {
   router.push(`/p/${post.id}`);
-}
+};
 </script>
 
 <style scoped>

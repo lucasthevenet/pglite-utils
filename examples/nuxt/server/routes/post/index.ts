@@ -1,4 +1,5 @@
 import { getServerSession } from "~/server/auth";
+
 import { prisma } from "../../db";
 
 // https://nuxt.com/docs/guide/directory-structure/server

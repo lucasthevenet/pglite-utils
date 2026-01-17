@@ -5,12 +5,16 @@
     </p>
     <p v-else-if="error">Error while fetching feed 💔</p>
     <main v-else>
-      <h2>{{ article.title }} ({{ article.published ? 'Published' : 'Draft' }})</h2>
+      <h2>
+        {{ article.title }} ({{ article.published ? "Published" : "Draft" }})
+      </h2>
       <p v-if="article.author">By {{ article.author.name }}</p>
       <p v-else>Unknown author</p>
       <div v-html="article.content"></div>
       <div class="btn-wrapper">
-        <button @click="publish(article.id)" v-if="!article.published">Publish</button>
+        <button @click="publish(article.id)" v-if="!article.published">
+          Publish
+        </button>
         <button @click="destroy(article.id)">Delete</button>
       </div>
     </main>
@@ -20,39 +24,45 @@
 const article = ref({});
 
 const router = useRouter();
-const { params: { id } } = useRoute();
+const {
+  params: { id },
+} = useRoute();
 
-const { pending, error, refresh } = await useLazyAsyncData('article', async () => {
-    const getArticles = await fetch(`/post/${ id }`, {
-    method: 'GET'
-  }).then(res => res.json());
+const { pending, error, refresh } = await useLazyAsyncData(
+  "article",
+  async () => {
+    const getArticles = await fetch(`/post/${id}`, {
+      method: "GET",
+    }).then((res) => res.json());
 
-  article.value = getArticles;
-}, { server: false });
+    article.value = getArticles;
+  },
+  { server: false }
+);
 
 const destroy = async (id) => {
   await fetch(`/post/${id}`, {
-    method: 'DELETE',
+    method: "DELETE",
   })
-  .then(()=>{
-    router.push('/');
-  })
-  .catch((error)=>{
-    console.error(error);
-  });
-}
+    .then(() => {
+      router.push("/");
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
 
 const publish = async (id) => {
   await fetch(`/publish/${id}`, {
-    method: 'PUT',
+    method: "PUT",
   })
-  .then(()=>{
-    router.push('/');
-  })
-  .catch((error)=>{
-    console.error(error);
-  });
-}
+    .then(() => {
+      router.push("/");
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
 </script>
 
 <style scoped>

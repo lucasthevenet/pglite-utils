@@ -5,8 +5,8 @@
       <input autoFocus placeholder="Title" type="text" v-model="title" />
       <textarea cols="50" placeholder="Content" rows="8" v-model="content" />
       <input
-        :class="{'primary': title }"
-        v-bind="{'disabled': !title }"
+        :class="{ primary: title }"
+        v-bind="{ disabled: !title }"
         type="submit"
         value="Create"
       />
@@ -21,26 +21,25 @@ const title = ref();
 const content = ref();
 const isLoading = ref(false);
 
-
 const createDraft = async (e) => {
-  e.preventDefault()
+  e.preventDefault();
   const body = {
     title: title.value,
     content: content.value,
-  }
+  };
 
   await fetch("/post", {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   })
-  .then(()=>{
-    router.push({ name: 'drafts' })
-  })
-  .catch((error)=>{
-    console.error(error);
-  })
-}
+    .then(() => {
+      router.push({ name: "drafts" });
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
 </script>
 <style scoped>
 .page {
@@ -51,7 +50,7 @@ const createDraft = async (e) => {
   align-items: center;
 }
 
-input[type='text'],
+input[type="text"],
 textarea {
   width: 100%;
   padding: 0.5rem;
@@ -60,7 +59,7 @@ textarea {
   border: 0.125rem solid rgba(0, 0, 0, 0.2);
 }
 
-input[type='submit'] {
+input[type="submit"] {
   background: #ececec;
   border: 0;
   padding: 1rem 2rem;

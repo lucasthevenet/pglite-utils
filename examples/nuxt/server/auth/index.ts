@@ -1,9 +1,11 @@
 import type { AuthConfig } from "@auth/core";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "../db";
-import GitHub from "@auth/core/providers/github";
-import { getSession } from "./lib";
 import type { H3Event } from "h3";
+
+import GitHub from "@auth/core/providers/github";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+
+import { prisma } from "../db";
+import { getSession } from "./lib";
 
 export const authConfig: Omit<AuthConfig, "raw"> = {
   secret: process.env.AUTH_SECRET,

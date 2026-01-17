@@ -14,11 +14,15 @@
 </template>
 
 <script setup>
-definePageMeta({ layout: 'default' });
+definePageMeta({ layout: "default" });
 
-const { data, pending, error } = await useLazyAsyncData('drafts', async () => {
-  return await fetch('/draft-list').then(res => res.json());
-}, { server: false });
+const { data, pending, error } = await useLazyAsyncData(
+  "drafts",
+  async () => {
+    return await fetch("/draft-list").then((res) => res.json());
+  },
+  { server: false }
+);
 </script>
 
 <style scoped>
