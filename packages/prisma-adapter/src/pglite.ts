@@ -1,4 +1,4 @@
-import * as pglite from "@electric-sql/pglite";
+import type { PGliteWorker } from "@electric-sql/pglite/worker";
 import type {
   ArgType,
   ColumnType,
@@ -12,11 +12,17 @@ import type {
   Transaction,
   TransactionOptions,
 } from "@prisma/driver-adapter-utils";
+
+import * as pglite from "@electric-sql/pglite";
 import { Debug, DriverAdapterError } from "@prisma/driver-adapter-utils";
 
-import type { PGliteWorker } from "@electric-sql/pglite/worker";
 import { name as packageName } from "../package.json";
-import { UnsupportedNativeDataType, customParsers, fieldToColumnType, mapArg } from "./conversion";
+import {
+  UnsupportedNativeDataType,
+  customParsers,
+  fieldToColumnType,
+  mapArg,
+} from "./conversion";
 import { type Deferred, createDeferred } from "./deferred";
 import { convertDriverError } from "./errors";
 
@@ -72,7 +78,9 @@ class PGliteQueryable<
 
   private async performIO(query: SqlQuery): Promise<pglite.Results<unknown>> {
     const { sql, args } = query;
-    const values = args.map((arg, i) => mapArg(arg, query.argTypes[i] as ArgType));
+    const values = args.map((arg, i) =>
+      mapArg(arg, query.argTypes[i] as ArgType)
+    );
 
     try {
       const result = await this.client.query(sql, values, {
@@ -86,21 +94,24 @@ class PGliteQueryable<
     }
   }
 
-	protected onError(error: unknown): never {
-		debug("Error in performIO: %O", error);
-		if (error instanceof pglite.messages.DatabaseError) {
-			throw new DriverAdapterError(convertDriverError(error));
-		}
-		throw error;
-	}
+  protected onError(error: unknown): never {
+    debug("Error in performIO: %O", error);
+    if (error instanceof pglite.messages.DatabaseError) {
+      throw new DriverAdapterError(convertDriverError(error));
+    }
+    throw error;
+  }
 }
 
-class PGliteTransaction extends PGliteQueryable<pglite.Transaction> implements Transaction {
+class PGliteTransaction
+  extends PGliteQueryable<pglite.Transaction>
+  implements Transaction
+{
   constructor(
     client: pglite.Transaction,
     readonly options: TransactionOptions,
     private txDeferred: Deferred<void>,
-    private txResultPromise: Promise<void>,
+    private txResultPromise: Promise<void>
   ) {
     super(client);
   }
@@ -123,10 +134,13 @@ export type PrismaPGliteOptions = {
   schema?: string;
 };
 
-class PrismaPGliteAdapter extends PGliteQueryable<pglite.PGlite> implements SqlDriverAdapter {
+class PrismaPGliteAdapter
+  extends PGliteQueryable<pglite.PGlite>
+  implements SqlDriverAdapter
+{
   constructor(
     client: pglite.PGlite,
-    private options?: PrismaPGliteOptions,
+    private options?: PrismaPGliteOptions
   ) {
     super(client);
   }
@@ -147,7 +161,9 @@ class PrismaPGliteAdapter extends PGliteQueryable<pglite.PGlite> implements SqlD
     };
   }
 
-  async startTransaction(isolationLevel?: IsolationLevel): Promise<Transaction> {
+  async startTransaction(
+    isolationLevel?: IsolationLevel
+  ): Promise<Transaction> {
     const options: TransactionOptions = {
       usePhantomQuery: true,
     };
@@ -164,13 +180,18 @@ class PrismaPGliteAdapter extends PGliteQueryable<pglite.PGlite> implements SqlD
 
   async startTransactionInner(
     conn: pglite.PGlite,
-    options: TransactionOptions,
+    options: TransactionOptions
   ): Promise<Transaction> {
     return new Promise<Transaction>((resolve, reject) => {
       const txResultPromise = conn
         .transaction(async (tx) => {
           const [txDeferred, deferredPromise] = createDeferred<void>();
-          const txWrapper = new PGliteTransaction(tx, options, txDeferred, txResultPromise);
+          const txWrapper = new PGliteTransaction(
+            tx,
+            options,
+            txDeferred,
+            txResultPromise
+          );
           resolve(txWrapper);
           return deferredPromise;
         })
@@ -198,7 +219,7 @@ export class PrismaPGliteAdapterFactory implements SqlMigrationAwareDriverAdapte
 
   connectToShadowDb(): Promise<SqlDriverAdapter> {
     return Promise.resolve(
-      new PrismaPGliteAdapter(new pglite.PGlite({ dataDir: "memory://shadow" })),
+      new PrismaPGliteAdapter(new pglite.PGlite({ dataDir: "memory://shadow" }))
     );
   }
 }

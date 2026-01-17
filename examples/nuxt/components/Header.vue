@@ -30,7 +30,7 @@ a {
   display: inline-block;
 }
 
-.left a[data-active='true'] {
+.left a[data-active="true"] {
   color: gray;
 }
 

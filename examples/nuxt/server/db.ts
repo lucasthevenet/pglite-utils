@@ -5,7 +5,9 @@ import { resolve } from "pathe";
 import { PrismaPGlite } from "pglite-prisma-adapter";
 
 const prismaClientSingleton = () => {
-  const client = new PGlite(resolve(process.env.DATABASE_URL ?? "./prisma/pgdata"));
+  const client = new PGlite(
+    resolve(process.env.DATABASE_URL ?? "./prisma/pgdata")
+  );
   const adapter = new PrismaPGlite(client);
   return new PrismaClient({
     adapter,

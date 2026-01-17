@@ -1,6 +1,7 @@
-import { readFile } from "node:fs/promises";
 import { PGlite } from "@electric-sql/pglite";
+import { readFile } from "node:fs/promises";
 import { PrismaPGlite } from "pglite-prisma-adapter";
+
 import { smokeTest } from "./test";
 
 async function applyMigrations(client: PGlite) {

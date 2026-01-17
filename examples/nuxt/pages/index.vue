@@ -16,13 +16,14 @@
 <script setup>
 const feed = ref([]);
 
-const { pending, error } = await useLazyAsyncData(async () => {
-  const getFeed = await fetch("/feed").then((res) =>
-    res.json()
-  )
+const { pending, error } = await useLazyAsyncData(
+  async () => {
+    const getFeed = await fetch("/feed").then((res) => res.json());
 
-  feed.value = getFeed;
-}, { server: false });
+    feed.value = getFeed;
+  },
+  { server: false }
+);
 </script>
 
 <style>
