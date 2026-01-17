@@ -1,5 +1,8 @@
-import { type Error as DriverAdapterErrorObject, type MappedError } from '@prisma/driver-adapter-utils'
 import * as pglite from "@electric-sql/pglite";
+import {
+  type Error as DriverAdapterErrorObject,
+  type MappedError,
+} from "@prisma/driver-adapter-utils";
 
 export function convertDriverError(error: unknown): DriverAdapterErrorObject {
   if (isDriverError(error)) {
@@ -7,126 +10,126 @@ export function convertDriverError(error: unknown): DriverAdapterErrorObject {
       originalCode: error.code,
       originalMessage: error.message,
       ...mapDriverError(error),
-    }
+    };
   }
 
-  throw error
+  throw error;
 }
 
 function mapDriverError(error: pglite.messages.DatabaseError): MappedError {
   switch (error.code) {
-    case '22001':
+    case "22001":
       return {
-        kind: 'LengthMismatch',
+        kind: "LengthMismatch",
         column: error.column,
-      }
-    case '22003':
+      };
+    case "22003":
       return {
-        kind: 'ValueOutOfRange',
+        kind: "ValueOutOfRange",
         cause: error.message,
-      }
-    case '22P02':
+      };
+    case "22P02":
       return {
-        kind: 'InvalidInputValue',
+        kind: "InvalidInputValue",
         message: error.message,
-      }
-    case '23505': {
+      };
+    case "23505": {
       const fields = error.detail
         ?.match(/Key \(([^)]+)\)/)
         ?.at(1)
-        ?.split(', ')
+        ?.split(", ");
       return {
-        kind: 'UniqueConstraintViolation',
+        kind: "UniqueConstraintViolation",
         constraint: fields !== undefined ? { fields } : undefined,
-      }
+      };
     }
-    case '23502': {
+    case "23502": {
       const fields = error.detail
         ?.match(/Key \(([^)]+)\)/)
         ?.at(1)
-        ?.split(', ')
+        ?.split(", ");
       return {
-        kind: 'NullConstraintViolation',
+        kind: "NullConstraintViolation",
         constraint: fields !== undefined ? { fields } : undefined,
-      }
+      };
     }
-    case '23503': {
-      let constraint: { fields: string[] } | { index: string } | undefined
+    case "23503": {
+      let constraint: { fields: string[] } | { index: string } | undefined;
 
       if (error.column) {
-        constraint = { fields: [error.column] }
+        constraint = { fields: [error.column] };
       } else if (error.constraint) {
-        constraint = { index: error.constraint }
+        constraint = { index: error.constraint };
       }
 
       return {
-        kind: 'ForeignKeyConstraintViolation',
+        kind: "ForeignKeyConstraintViolation",
         constraint,
-      }
+      };
     }
-    case '3D000':
+    case "3D000":
       return {
-        kind: 'DatabaseDoesNotExist',
-        db: error.message.split(' ').at(1)?.split('"').at(1),
-      }
-    case '28000':
+        kind: "DatabaseDoesNotExist",
+        db: error.message.split(" ").at(1)?.split('"').at(1),
+      };
+    case "28000":
       return {
-        kind: 'DatabaseAccessDenied',
+        kind: "DatabaseAccessDenied",
         db: error.message
-          .split(',')
-          .find((s) => s.startsWith(' database'))
+          .split(",")
+          .find((s) => s.startsWith(" database"))
           ?.split('"')
           .at(1),
-      }
-    case '28P01':
+      };
+    case "28P01":
       return {
-        kind: 'AuthenticationFailed',
-        user: error.message.split(' ').pop()?.split('"').at(1),
-      }
-    case '40001':
+        kind: "AuthenticationFailed",
+        user: error.message.split(" ").pop()?.split('"').at(1),
+      };
+    case "40001":
       return {
-        kind: 'TransactionWriteConflict',
-      }
-    case '42P01':
+        kind: "TransactionWriteConflict",
+      };
+    case "42P01":
       return {
-        kind: 'TableDoesNotExist',
-        table: error.message.split(' ').at(1)?.split('"').at(1),
-      }
-    case '42703':
+        kind: "TableDoesNotExist",
+        table: error.message.split(" ").at(1)?.split('"').at(1),
+      };
+    case "42703":
       return {
-        kind: 'ColumnNotFound',
-        column: error.message.split(' ').at(1)?.split('"').at(1),
-      }
-    case '42P04':
+        kind: "ColumnNotFound",
+        column: error.message.split(" ").at(1)?.split('"').at(1),
+      };
+    case "42P04":
       return {
-        kind: 'DatabaseAlreadyExists',
-        db: error.message.split(' ').at(1)?.split('"').at(1),
-      }
-    case '53300':
+        kind: "DatabaseAlreadyExists",
+        db: error.message.split(" ").at(1)?.split('"').at(1),
+      };
+    case "53300":
       return {
-        kind: 'TooManyConnections',
+        kind: "TooManyConnections",
         cause: error.message,
-      }
+      };
     default:
       return {
-        kind: 'postgres',
-        code: error.code ?? 'N/A',
-        severity: error.severity ?? 'N/A',
+        kind: "postgres",
+        code: error.code ?? "N/A",
+        severity: error.severity ?? "N/A",
         message: error.message,
         detail: error.detail,
         column: error.column,
         hint: error.hint,
-      }
+      };
   }
 }
 
 function isDriverError(error: any): error is pglite.messages.DatabaseError {
   return (
-    typeof error.code === 'string' &&
-    typeof error.message === 'string' &&
-    typeof error.severity === 'string' &&
-    (typeof error.detail === 'string' || error.detail === undefined) &&
-    (typeof error.column === 'string' || error.column === undefined) &&
-    (typeof error.hint === 'string' || error.hint === undefined)
-  )
+    typeof error.code === "string" &&
+    typeof error.message === "string" &&
+    typeof error.severity === "string" &&
+    (typeof error.detail === "string" || error.detail === undefined) &&
+    (typeof error.column === "string" || error.column === undefined) &&
+    (typeof error.hint === "string" || error.hint === undefined)
+  );
 }

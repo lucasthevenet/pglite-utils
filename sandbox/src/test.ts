@@ -4,7 +4,6 @@ import { setImmediate, setTimeout } from "node:timers/promises";
 import superjson from "superjson";
 
 import { PrismaClient } from "../prisma/generated/client/client";
-import type { SqlDriverAdapterFactory } from "@prisma/driver-adapter-utils";
 
 export async function smokeTest(adapter: SqlDriverAdapterFactory) {
   // wait for the database pool to be initialized
@@ -324,17 +323,27 @@ class SmokeTest {
   }
 
   async testPrismaClientKnownRequestError() {
-    const error = await this.prisma.product.createMany({
-      data: [
-        { id: "1", properties: {} },
-        { id: "1", properties: {} }
-      ],
-    }).catch((error) => error);
+    const error = await this.prisma.product
+      .createMany({
+        data: [
+          { id: "1", properties: {} },
+          { id: "1", properties: {} },
+        ],
+      })
+      .catch((error) => error);
 
-    if (!(error.code === "P2002" && error.meta.driverAdapterError.cause.kind === "UniqueConstraintViolation")) {
+    if (
+      !(
+        error.code === "P2002" &&
+        error.meta.driverAdapterError.cause.kind === "UniqueConstraintViolation"
+      )
+    ) {
       throw new Error("Expected UniqueConstraintViolation (P2002) error");
     }
 
-    console.log("[nodejs] PrismaClientKnownRequestError", superjson.serialize(error).json);
+    console.log(
+      "[nodejs] PrismaClientKnownRequestError",
+      superjson.serialize(error).json
+    );
   }
 }
