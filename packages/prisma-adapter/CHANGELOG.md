@@ -1,5 +1,11 @@
 # pglite-prisma-adapter
 
+## 0.7.2
+
+### Patch Changes
+
+- 24ce947: Fix the drive adapter errors mapping to PrismaClientKnownRequestError. Thanks to @alexmalev ! #44 #45
+
 ## 0.7.1
 
 ### Patch Changes
