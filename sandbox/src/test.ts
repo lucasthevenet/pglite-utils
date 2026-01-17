@@ -4,6 +4,7 @@ import { setImmediate, setTimeout } from "node:timers/promises";
 import superjson from "superjson";
 
 import { PrismaClient } from "../prisma/generated/client/client";
+import type { SqlDriverAdapterFactory } from "@prisma/driver-adapter-utils";
 
 export async function smokeTest(adapter: SqlDriverAdapterFactory) {
   // wait for the database pool to be initialized
@@ -28,6 +29,7 @@ export async function smokeTest(adapter: SqlDriverAdapterFactory) {
   await test.explicitTransaction();
   await test.testBigInt();
   await test.testAllArrayTypes();
+  await test.testPrismaClientKnownRequestError();
 
   console.log("[nodejs] disconnecting...");
   await prisma.$disconnect();
@@ -62,31 +64,6 @@ class SmokeTest {
       },
       select: {
         properties: true,
-      },
-    });
-
-    console.log("[nodejs] created", superjson.serialize(created).json);
-
-    const resultSet = await this.prisma.product.findMany({});
-    console.log("[nodejs] resultSet", superjson.serialize(resultSet).json);
-
-    await this.prisma.product.deleteMany({});
-  }
-
-  async testJSONArray() {
-    const jsonArray = [
-      {
-        foo: "bar",
-        baz: 1,
-      },
-    ];
-
-    const created = await this.prisma.productWithJsonArray.create({
-      data: {
-        properties_arr: jsonArray,
-      },
-      select: {
-        properties_arr: true,
       },
     });
 
@@ -344,5 +321,20 @@ class SmokeTest {
     console.log("[nodejs] resultSet", superjson.serialize(resultSet).json);
 
     await this.prisma.array_type_test.deleteMany({});
+  }
+
+  async testPrismaClientKnownRequestError() {
+    const error = await this.prisma.product.createMany({
+      data: [
+        { id: "1", properties: {} },
+        { id: "1", properties: {} }
+      ],
+    }).catch((error) => error);
+
+    if (!(error.code === "P2002" && error.meta.driverAdapterError.cause.kind === "UniqueConstraintViolation")) {
+      throw new Error("Expected UniqueConstraintViolation (P2002) error");
+    }
+
+    console.log("[nodejs] PrismaClientKnownRequestError", superjson.serialize(error).json);
   }
 }

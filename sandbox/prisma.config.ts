@@ -1,5 +1,6 @@
 import path from "node:path";
 import { defineConfig } from "prisma/config";
+
 // import your .env file
 import "dotenv/config";
 
